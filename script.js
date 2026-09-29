@@ -213,3 +213,90 @@ document.addEventListener('keydown', (e) => {
   if (e.key === '/' && !typing && term.hidden) { e.preventDefault(); openTerm(); }
   if (e.key === 'Escape' && !term.hidden) closeTerm();
 });
+
+/* ---------- buddy: 돌아다니는 쫄라맨 ---------- */
+(() => {
+  const buddy = $('#buddy');
+  const bubble = $('#buddyBubble');
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const LINES = [
+    '안녕하세요! 👋',
+    '/ 키를 눌러보세요!',
+    '글벗 데모 해보셨어요?',
+    '커피챗 환영 ☕',
+    '저 논문 4편 썼어요 📄',
+    '간지러워요 😆',
+    'LangGraph 좋아해요',
+  ];
+  const rand = (a, b) => a + Math.random() * (b - a);
+  const maxX = () => window.innerWidth - buddy.offsetWidth;
+
+  let x = maxX() * 0.8;
+  let dir = -1;
+  let state = 'idle';
+  let until = 0;
+  let last = performance.now();
+  let bubbleTimer;
+
+  function say(text) {
+    bubble.textContent = text;
+    bubble.classList.add('show');
+    clearTimeout(bubbleTimer);
+    bubbleTimer = setTimeout(() => bubble.classList.remove('show'), 2200);
+  }
+
+  function setState(next, now) {
+    state = next;
+    buddy.classList.toggle('walking', next === 'walk');
+    buddy.classList.toggle('waving', next === 'wave');
+    if (next === 'walk') {
+      until = now + rand(2500, 6000);
+      if (Math.random() < 0.35) dir *= -1;
+    } else if (next === 'wave') {
+      until = now + 1600;
+      say(LINES[0]);
+    } else {
+      until = now + rand(1000, 2800);
+      if (Math.random() < 0.25) say(LINES[1 + Math.floor(Math.random() * 4)]);
+    }
+  }
+
+  function place() {
+    buddy.style.transform = `translateX(${x}px)`;
+    buddy.classList.toggle('edge-l', x < 80);
+    buddy.classList.toggle('edge-r', x > maxX() - 80);
+  }
+
+  function tick(now) {
+    const dt = Math.min(now - last, 50) / 1000;
+    last = now;
+    if (state === 'walk') {
+      x += dir * 70 * dt;
+      if (x <= 0) { x = 0; dir = 1; }
+      if (x >= maxX()) { x = maxX(); dir = -1; }
+    }
+    if (now > until) {
+      const r = Math.random();
+      setState(state === 'walk' ? (r < 0.2 ? 'wave' : 'idle') : 'walk', now);
+    }
+    place();
+    requestAnimationFrame(tick);
+  }
+
+  buddy.addEventListener('click', () => {
+    buddy.classList.remove('jumping');
+    void buddy.offsetWidth; // 애니메이션 재시작
+    buddy.classList.add('jumping');
+    say(LINES[Math.floor(Math.random() * LINES.length)]);
+  });
+  buddy.addEventListener('animationend', (e) => {
+    if (e.animationName === 'jump') buddy.classList.remove('jumping');
+  });
+  window.addEventListener('resize', () => { x = Math.min(x, maxX()); place(); });
+
+  place();
+  if (!reduced) {
+    setState('wave', performance.now());
+    requestAnimationFrame(tick);
+  }
+})();

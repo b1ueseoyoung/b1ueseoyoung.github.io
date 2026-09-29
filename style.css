@@ -271,3 +271,61 @@ h1 { font-size: clamp(2.1rem, 5vw, 3.4rem); line-height: 1.22; font-weight: 900;
   html { scroll-behavior: auto; }
   .reveal { opacity: 1; transform: none; }
 }
+
+/* BUDDY — 돌아다니는 쫄라맨 */
+.buddy {
+  position: fixed; left: 0; bottom: 0; z-index: 40;
+  width: 64px; cursor: pointer; user-select: none;
+  will-change: transform;
+}
+.buddy-inner { display: flex; flex-direction: column; align-items: center; }
+.buddy-face {
+  width: 60px; height: 60px; object-fit: contain; margin-bottom: -4px;
+  position: relative; z-index: 1;
+  filter: drop-shadow(0 2px 3px rgba(0,0,0,.18));
+}
+.buddy-face.fallback { border-radius: 50%; object-fit: cover; border: 2px solid var(--text); }
+.buddy-body { width: 50px; height: 72px; overflow: visible; }
+.buddy-body line { stroke: var(--text); stroke-width: 3; stroke-linecap: round; }
+.limb { transform-box: view-box; }
+.arm-l, .arm-r { transform-origin: 25px 6px; }
+.leg-l, .leg-r { transform-origin: 25px 36px; }
+.arm-l { transform: rotate(32deg); } .arm-r { transform: rotate(-32deg); }
+.leg-l { transform: rotate(16deg); } .leg-r { transform: rotate(-16deg); }
+
+.buddy.walking .leg-l, .buddy.walking .arm-r { animation: swing .5s ease-in-out infinite alternate; }
+.buddy.walking .leg-r, .buddy.walking .arm-l { animation: swing .5s ease-in-out infinite alternate-reverse; }
+.buddy.walking .buddy-inner { animation: bob .25s ease-in-out infinite alternate; }
+@keyframes swing { from { transform: rotate(-34deg); } to { transform: rotate(34deg); } }
+@keyframes bob { to { transform: translateY(-3px); } }
+
+.buddy.waving .arm-r { animation: wave .3s ease-in-out infinite alternate; }
+@keyframes wave { from { transform: rotate(-115deg); } to { transform: rotate(-70deg); } }
+
+.buddy.jumping .buddy-inner { animation: jump .55s cubic-bezier(.3,.7,.4,1); }
+@keyframes jump { 40% { transform: translateY(-70px) rotate(-8deg); } 70% { transform: translateY(0) scaleY(.9); } }
+
+.buddy-bubble {
+  position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%) scale(.8);
+  white-space: nowrap; padding: 7px 12px; border-radius: 12px;
+  background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow);
+  font-size: .82rem; opacity: 0; transition: opacity .2s, transform .2s; pointer-events: none;
+}
+.buddy-bubble::after {
+  content: ""; position: absolute; top: 100%; left: 50%; margin-left: -6px;
+  border: 6px solid transparent; border-top-color: var(--surface);
+}
+.buddy-bubble.show { opacity: 1; transform: translateX(-50%) scale(1); }
+/* 화면 가장자리에서는 말풍선이 안쪽으로 붙어요 */
+.buddy.edge-r .buddy-bubble { left: auto; right: 0; transform: scale(.8); }
+.buddy.edge-r .buddy-bubble.show { transform: scale(1); }
+.buddy.edge-r .buddy-bubble::after { left: auto; right: 20px; }
+.buddy.edge-l .buddy-bubble { left: 0; transform: scale(.8); }
+.buddy.edge-l .buddy-bubble.show { transform: scale(1); }
+.buddy.edge-l .buddy-bubble::after { left: 20px; }
+
+@media (max-width: 600px) {
+  .buddy { width: 48px; }
+  .buddy-face { width: 46px; height: 46px; }
+  .buddy-body { width: 38px; height: 55px; }
+}

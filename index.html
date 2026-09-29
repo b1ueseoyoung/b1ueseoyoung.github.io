@@ -243,6 +243,22 @@
     </div>
   </div>
 
+  <!-- BUDDY: 돌아다니는 쫄라맨 -->
+  <div class="buddy" id="buddy" aria-hidden="true">
+    <div class="buddy-bubble" id="buddyBubble"></div>
+    <div class="buddy-inner">
+      <img class="buddy-face" src="face.png" alt="" draggable="false"
+           onerror="this.onerror=null;this.src='https://avatars.githubusercontent.com/u/174824837?v=4';this.classList.add('fallback')" />
+      <svg class="buddy-body" viewBox="0 0 50 72">
+        <line x1="25" y1="0" x2="25" y2="36" />
+        <line class="limb arm-l" x1="25" y1="6" x2="25" y2="30" />
+        <line class="limb arm-r" x1="25" y1="6" x2="25" y2="30" />
+        <line class="limb leg-l" x1="25" y1="36" x2="25" y2="70" />
+        <line class="limb leg-r" x1="25" y1="36" x2="25" y2="70" />
+      </svg>
+    </div>
+  </div>
+
   <div class="toast" id="toast"></div>
   <script src="script.js"></script>
 </body>
