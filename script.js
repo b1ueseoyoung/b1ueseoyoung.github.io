@@ -248,10 +248,15 @@ document.addEventListener('keydown', (e) => {
   function setState(next, now) {
     state = next;
     buddy.classList.toggle('walking', next === 'walk');
+    buddy.classList.toggle('running', next === 'run');
     buddy.classList.toggle('waving', next === 'wave');
     if (next === 'walk') {
       until = now + rand(2500, 6000);
       if (Math.random() < 0.35) dir *= -1;
+    } else if (next === 'run') {
+      until = now + rand(1500, 3200);
+      if (Math.random() < 0.5) dir *= -1;
+      if (Math.random() < 0.4) say('바빠요 바빠! 💨');
     } else if (next === 'wave') {
       until = now + 1600;
       say(LINES[0]);
@@ -263,6 +268,7 @@ document.addEventListener('keydown', (e) => {
 
   function place() {
     buddy.style.transform = `translateX(${x}px)`;
+    buddy.style.setProperty('--dir', dir);
     buddy.classList.toggle('edge-l', x < 80);
     buddy.classList.toggle('edge-r', x > maxX() - 80);
   }
@@ -270,14 +276,15 @@ document.addEventListener('keydown', (e) => {
   function tick(now) {
     const dt = Math.min(now - last, 50) / 1000;
     last = now;
-    if (state === 'walk') {
-      x += dir * 70 * dt;
+    if (state === 'walk' || state === 'run') {
+      x += dir * (state === 'run' ? 240 : 70) * dt;
       if (x <= 0) { x = 0; dir = 1; }
       if (x >= maxX()) { x = maxX(); dir = -1; }
     }
     if (now > until) {
       const r = Math.random();
-      setState(state === 'walk' ? (r < 0.2 ? 'wave' : 'idle') : 'walk', now);
+      const moving = state === 'walk' || state === 'run';
+      setState(moving ? (r < 0.2 ? 'wave' : 'idle') : (r < 0.35 ? 'run' : 'walk'), now);
     }
     place();
     requestAnimationFrame(tick);
@@ -288,6 +295,7 @@ document.addEventListener('keydown', (e) => {
     void buddy.offsetWidth; // 애니메이션 재시작
     buddy.classList.add('jumping');
     say(LINES[Math.floor(Math.random() * LINES.length)]);
+    if (!reduced) setTimeout(() => setState('run', performance.now()), 550);
   });
   buddy.addEventListener('animationend', (e) => {
     if (e.animationName === 'jump') buddy.classList.remove('jumping');

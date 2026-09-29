@@ -299,6 +299,15 @@ h1 { font-size: clamp(2.1rem, 5vw, 3.4rem); line-height: 1.22; font-weight: 900;
 @keyframes swing { from { transform: rotate(-34deg); } to { transform: rotate(34deg); } }
 @keyframes bob { to { transform: translateY(-3px); } }
 
+.buddy.running .leg-l, .buddy.running .arm-r { animation: sprint .2s ease-in-out infinite alternate; }
+.buddy.running .leg-r, .buddy.running .arm-l { animation: sprint .2s ease-in-out infinite alternate-reverse; }
+.buddy.running .buddy-inner { animation: runbob .1s ease-in-out infinite alternate; }
+@keyframes sprint { from { transform: rotate(-55deg); } to { transform: rotate(55deg); } }
+@keyframes runbob {
+  from { transform: rotate(calc(var(--dir, 1) * 10deg)); }
+  to { transform: translateY(-6px) rotate(calc(var(--dir, 1) * 10deg)); }
+}
+
 .buddy.waving .arm-r { animation: wave .3s ease-in-out infinite alternate; }
 @keyframes wave { from { transform: rotate(-115deg); } to { transform: rotate(-70deg); } }
 
