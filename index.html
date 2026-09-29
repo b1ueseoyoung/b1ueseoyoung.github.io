@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>seoyoung — AI Engineer</title>
+  <meta name="description" content="사용자 맥락 속에서 의미 있는 AI 경험을 설계하는 AI Engineer & System Architect, seoyoung의 포트폴리오." />
+  <meta property="og:title" content="seoyoung — AI Engineer & System Architect" />
+  <meta property="og:description" content="구조를 그리고 · 연구로 검증하고 · 시스템으로 만듭니다." />
+  <meta property="og:image" content="https://avatars.githubusercontent.com/u/174824837?v=4" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔷</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="nav">
+    <a href="#top" class="logo">b1ue<span>seoyoung</span></a>
+    <nav>
+      <a href="#focus">Focus</a>
+      <a href="#projects">Projects</a>
+      <a href="#research">Research</a>
+      <a href="#stack">Stack</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <div class="nav-actions">
+      <button class="icon-btn" id="termBtn" title="터미널 열기 ( / )" aria-label="터미널 열기">&gt;_</button>
+      <button class="icon-btn" id="themeBtn" title="테마 전환" aria-label="테마 전환">◐</button>
+    </div>
+  </header>
+
+  <main id="top">
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-text">
+        <p class="eyebrow">AI Engineer &amp; System Architect</p>
+        <h1>
+          이걸 쓰는 사람은<br />
+          <span class="hl">어떤 경험</span>을 하게 될까?
+        </h1>
+        <p class="lead">
+          AI를 기능으로 붙이는 대신, 사용자의 맥락 속에서 자연스럽고 의미 있는 경험이 되도록 설계합니다.
+          <strong>구조를 그리고 · 연구로 검증하고 · 시스템으로 만드는</strong> 과정 전체를 설계합니다.
+        </p>
+        <div class="cta">
+          <a class="btn primary" href="#projects">프로젝트 보기</a>
+          <a class="btn" href="https://github.com/b1ueseoyoung" target="_blank" rel="noopener">GitHub ↗</a>
+        </div>
+        <p class="hint">tip: <kbd>/</kbd> 키를 누르면 터미널이 열려요</p>
+      </div>
+
+      <!-- toy: multi-agent pipeline -->
+      <div class="pipeline-card" aria-label="멀티 에이전트 파이프라인 데모">
+        <div class="pc-head">
+          <span class="dots"><i></i><i></i><i></i></span>
+          <span class="pc-title">lore_keeper.run()</span>
+        </div>
+        <div class="pc-input">
+          <label for="chunkInput">입력 청크</label>
+          <input id="chunkInput" value="카엘은 왼손잡이 검사다." maxlength="60" />
+        </div>
+        <ol class="pipeline" id="pipeline">
+          <li data-step="classify"><b>classify</b><span>청크 유형 분류</span></li>
+          <li data-step="extract"><b>extract</b><span>설정 Fact 추출</span></li>
+          <li data-step="search"><b>RAG search</b><span>Lore DB 검색</span></li>
+          <li data-step="judge"><b>judge</b><span>충돌 판정</span></li>
+        </ol>
+        <div class="pc-out" id="pipeOut">▶ 실행 버튼을 눌러보세요</div>
+        <button class="btn primary small" id="runBtn">▶ 실행</button>
+      </div>
+    </section>
+
+    <!-- FOCUS -->
+    <section id="focus" class="section">
+      <h2 class="section-title"><span>01</span> Core Focus</h2>
+      <div class="grid three">
+        <article class="card focus">
+          <div class="focus-icon">🧭</div>
+          <h3>UX-first AI Design</h3>
+          <p>FairyRAG · CO-DITOR처럼 사용자의 맥락을 출발점으로 AI 경험을 설계합니다.</p>
+        </article>
+        <article class="card focus">
+          <div class="focus-icon">🧩</div>
+          <h3>System Architecture</h3>
+          <p>Multi-Agent 파이프라인, State 관리, Lore Keeper / Co-Author 구조를 설계합니다.</p>
+        </article>
+        <article class="card focus">
+          <div class="focus-icon">🔬</div>
+          <h3>Research → Production</h3>
+          <p>논문 4편, KCC 2025 장려상, HCI Korea 2026 발표로 검증하고 실서비스로 구현합니다.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- PROJECTS -->
+    <section id="projects" class="section">
+      <h2 class="section-title"><span>02</span> Featured Projects</h2>
+      <div class="filters" id="filters">
+        <button class="chip active" data-f="all">전체</button>
+        <button class="chip" data-f="rag">RAG</button>
+        <button class="chip" data-f="agent">Agent</button>
+        <button class="chip" data-f="ml">ML</button>
+        <button class="chip" data-f="web">Web</button>
+      </div>
+      <div class="grid two" id="projectGrid">
+        <article class="card project" data-tags="rag web">
+          <div class="p-top">
+            <span class="p-emoji">🧚</span>
+            <span class="badge">KCC 2025 장려상</span>
+          </div>
+          <h3>꿈도깨비</h3>
+          <p class="role">팀장 · 백엔드</p>
+          <p>FairyRAG 논문을 바탕으로 만든 대화형 동화 생성 웹 서비스예요. 연구를 실제 서비스로 옮긴 프로젝트입니다.</p>
+          <ul class="tags"><li>RAG</li><li>LLM</li><li>Backend</li><li>Team Lead</li></ul>
+          <div class="links">
+            <a href="https://github.com/BookEatingBoogie/main" target="_blank" rel="noopener">Repo ↗</a>
+            <a href="https://youtu.be/iD2Vp7fY_0E" target="_blank" rel="noopener">Demo ↗</a>
+          </div>
+        </article>
+
+        <article class="card project" data-tags="rag agent">
+          <div class="p-top">
+            <span class="p-emoji">✍️</span>
+            <span class="badge">Agentic RAG</span>
+          </div>
+          <h3>글벗 GeulBeot</h3>
+          <p class="role">당신의 가장 가까운 글친구</p>
+          <p>웹소설 원고에서 설정을 추출하고 Lore DB와 비교해 설정 충돌을 감지하고 복선을 추천해요. LangGraph 에이전트와 FAISS를 씁니다.</p>
+          <ul class="tags"><li>LangGraph</li><li>FAISS</li><li>Multi-Agent</li><li>OpenAI</li></ul>
+          <div class="links">
+            <a href="https://github.com/b1ueseoyoung/GeulBeot" target="_blank" rel="noopener">Repo ↗</a>
+          </div>
+        </article>
+
+        <article class="card project" data-tags="agent web">
+          <div class="p-top">
+            <span class="p-emoji">🛒</span>
+            <span class="badge">KT AIVLE</span>
+          </div>
+          <h3>SELLON</h3>
+          <p class="role">조장 · AI 파트 전담</p>
+          <p>멀티채널 이커머스 셀러를 위한 B2B AI SaaS예요. 이상 감지 에이전트와 CS 분류 에이전트를 만들었어요.</p>
+          <ul class="tags"><li>Agent</li><li>Anomaly Detection</li><li>Classification</li><li>SaaS</li></ul>
+          <div class="links">
+            <a href="https://github.com/AIVLE-SELLoN" target="_blank" rel="noopener">Repo ↗</a>
+          </div>
+        </article>
+
+        <article class="card project" data-tags="ml">
+          <div class="p-top">
+            <span class="p-emoji">🩺</span>
+            <span class="badge">Healthcare</span>
+          </div>
+          <h3>1형 소아당뇨 예측 시스템</h3>
+          <p class="role">혈당 예측 · 음식 추천</p>
+          <p>CGM(연속혈당측정) 데이터로 1형 소아당뇨 환자의 혈당을 예측하고, 그 결과에 맞는 음식을 추천해요.</p>
+          <ul class="tags"><li>Time Series</li><li>ML</li><li>Recommendation</li><li>DB</li></ul>
+          <div class="links">
+            <a href="https://github.com/b1ueseoyoung/DBProject" target="_blank" rel="noopener">Repo ↗</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- RESEARCH -->
+    <section id="research" class="section">
+      <h2 class="section-title"><span>03</span> Research &amp; Awards</h2>
+      <div class="research-wrap">
+        <ol class="timeline">
+          <li>
+            <span class="t-tag">🏆 Award</span>
+            <h3>KCC 2025 학부생 장려상</h3>
+            <p><em>FairyRAG</em>: 대화형 동화 생성 RAG</p>
+          </li>
+          <li>
+            <span class="t-tag">🎤 Talk</span>
+            <h3>HCI Korea 2026 구두 발표</h3>
+            <p><em>CO-DITOR</em>: 사용자 맥락 중심 AI 설계</p>
+          </li>
+          <li>
+            <span class="t-tag">🎓 Lab</span>
+            <h3>한성대 컴공 IRIS Lab</h3>
+            <p>산학공동연구 · 학부연구생 (진행 중)</p>
+          </li>
+          <li>
+            <span class="t-tag">🏫 Edu</span>
+            <h3>KT AIVLE School 9기</h3>
+            <p>AI 트랙 · 반장</p>
+          </li>
+        </ol>
+        <div class="card papers">
+          <p class="papers-count"><b id="paperCount">0</b> Papers</p>
+          <ul>
+            <li>FairyRAG</li>
+            <li>CO-DITOR</li>
+            <li>Co-Narrator</li>
+            <li>PA-RAG</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- STACK -->
+    <section id="stack" class="section">
+      <h2 class="section-title"><span>04</span> Tech Stack</h2>
+      <div class="stack">
+        <div class="stack-row"><h3>Language · Backend</h3><ul><li>Python</li><li>Java</li><li>FastAPI</li><li>Spring Boot</li></ul></div>
+        <div class="stack-row"><h3>ML · DL</h3><ul><li>PyTorch</li><li>TensorFlow</li><li>scikit-learn</li><li>Stable Diffusion</li></ul></div>
+        <div class="stack-row"><h3>LLM · Agent</h3><ul><li>LangChain</li><li>LangGraph</li><li>RAG</li><li>Multi-Agent</li><li>MCP</li><li>OpenAI API</li><li>FAISS</li><li>ChromaDB</li><li>LangSmith</li></ul></div>
+        <div class="stack-row"><h3>Cloud</h3><ul><li>AWS EC2</li><li>AWS S3</li></ul></div>
+        <div class="stack-row"><h3>Studying</h3><ul class="studying"><li>정보처리기사</li><li>정보보안기사</li><li>AWS Cloud</li></ul></div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="section contact">
+      <h2>함께 만들어요 👋</h2>
+      <p>프로젝트, 연구 협업, 커피챗 모두 환영해요.</p>
+      <div class="cta center">
+        <a class="btn primary" href="mailto:moosim1120@gmail.com">moosim1120@gmail.com</a>
+        <button class="btn" id="copyBtn">이메일 복사</button>
+        <a class="btn" href="https://github.com/b1ueseoyoung" target="_blank" rel="noopener">GitHub ↗</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">© <span id="year"></span> b1ueseoyoung · made with 💙</footer>
+
+  <!-- TERMINAL -->
+  <div class="term-backdrop" id="term" hidden>
+    <div class="term" role="dialog" aria-label="터미널">
+      <div class="pc-head">
+        <span class="dots"><i></i><i></i><i></i></span>
+        <span class="pc-title">guest@b1ueseoyoung: ~</span>
+        <button class="term-close" id="termClose" aria-label="닫기">✕</button>
+      </div>
+      <div class="term-body" id="termBody"></div>
+      <form class="term-line" id="termForm">
+        <span class="prompt">$</span>
+        <input id="termInput" autocomplete="off" spellcheck="false" aria-label="명령어 입력" />
+      </form>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <script src="script.js"></script>
+</body>
+</html>
