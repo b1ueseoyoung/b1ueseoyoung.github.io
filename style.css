@@ -95,7 +95,7 @@ h1 { font-size: clamp(2.1rem, 5vw, 3.4rem); line-height: 1.22; font-weight: 900;
 .btn.primary { background: var(--blue); border-color: var(--blue); color: #fff; }
 :root[data-theme="dark"] .btn.primary { color: #0b0f1a; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .btn.primary { color: #0b0f1a; } }
-.btn.small { padding: 8px 16px; font-size: .88rem; width: 100%; }
+.btn.small { padding: 8px 16px; font-size: .88rem; }
 .hint { margin-top: 20px; font-size: .85rem; color: var(--muted); }
 
 /* PIPELINE TOY */
@@ -141,6 +141,7 @@ h1 { font-size: clamp(2.1rem, 5vw, 3.4rem); line-height: 1.22; font-weight: 900;
 .pc-out {
   font-family: var(--mono); font-size: .8rem; padding: 10px 12px; border-radius: 10px;
   background: var(--bg); border: 1px solid var(--line); color: var(--muted); min-height: 42px;
+  overflow-wrap: anywhere;
 }
 .pc-out.ok { color: var(--ok); border-color: var(--ok); }
 .pc-out.warn { color: var(--warn); border-color: var(--warn); }
