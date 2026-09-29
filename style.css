@@ -275,7 +275,8 @@ h1 { font-size: clamp(2.1rem, 5vw, 3.4rem); line-height: 1.22; font-weight: 900;
 /* BUDDY — 돌아다니는 쫄라맨 */
 .buddy {
   position: fixed; left: 0; bottom: 0; z-index: 40;
-  width: 64px; cursor: pointer; user-select: none;
+  width: 64px; cursor: grab; user-select: none;
+  touch-action: none; -webkit-touch-callout: none; -webkit-user-select: none;
   will-change: transform;
 }
 .buddy-inner { position: relative; display: flex; flex-direction: column; align-items: center; }
@@ -307,6 +308,13 @@ h1 { font-size: clamp(2.1rem, 5vw, 3.4rem); line-height: 1.22; font-weight: 900;
   from { transform: rotate(calc(var(--dir, 1) * 10deg)); }
   to { transform: translateY(-6px) rotate(calc(var(--dir, 1) * 10deg)); }
 }
+
+/* 잡혀서 버둥버둥 */
+.buddy.dragging { cursor: grabbing; }
+.buddy.dragging .leg-l, .buddy.dragging .arm-r { animation: sprint .12s linear infinite alternate; }
+.buddy.dragging .leg-r, .buddy.dragging .arm-l { animation: sprint .12s linear infinite alternate-reverse; }
+.buddy.dragging .buddy-inner { transform-origin: 50% 20%; animation: dangle .45s ease-in-out infinite alternate; }
+@keyframes dangle { from { transform: rotate(-9deg); } to { transform: rotate(9deg); } }
 
 .buddy.waving .arm-r { animation: wave .3s ease-in-out infinite alternate; }
 @keyframes wave { from { transform: rotate(-115deg); } to { transform: rotate(-70deg); } }

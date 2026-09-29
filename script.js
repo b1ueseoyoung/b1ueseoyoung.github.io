@@ -214,7 +214,8 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape' && !term.hidden) closeTerm();
 });
 
-/* ---------- buddy: 돌아다니는 쫄라맨 ---------- */
+/* ---------- buddy: 돌아다니는 쫄라맨 ----------
+   짧게 누르면 점프, 꾹 누르거나 누른 채로 움직이면 잡아서 끌고 다닐 수 있어요. */
 (() => {
   const buddy = $('#buddy');
   const bubble = $('#buddyBubble');
@@ -228,15 +229,24 @@ document.addEventListener('keydown', (e) => {
     '간지러워요 😆',
     'LangGraph 좋아해요',
   ];
+  const GRAB_LINES = ['으악! 내려줘요 😵', '어디 가는 거예요?!', '높다아아 🙀', '살살 해주세요 🥺'];
+  const GRAVITY = 2400;
+  const HOLD_MS = 180;
   const rand = (a, b) => a + Math.random() * (b - a);
+  const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
   const maxX = () => window.innerWidth - buddy.offsetWidth;
+  const maxY = () => window.innerHeight - buddy.offsetHeight;
 
   let x = maxX() * 0.8;
+  let y = 0; // 바닥에서 떨어진 높이
+  let vx = 0, vy = 0;
   let dir = -1;
   let state = 'idle';
   let until = 0;
   let last = performance.now();
   let bubbleTimer;
+  let press = null;
 
   function say(text) {
     bubble.textContent = text;
@@ -245,11 +255,12 @@ document.addEventListener('keydown', (e) => {
     bubbleTimer = setTimeout(() => bubble.classList.remove('show'), 2200);
   }
 
-  function setState(next, now) {
+  function setState(next, now = performance.now()) {
     state = next;
     buddy.classList.toggle('walking', next === 'walk');
     buddy.classList.toggle('running', next === 'run');
     buddy.classList.toggle('waving', next === 'wave');
+    buddy.classList.toggle('dragging', next === 'drag' || next === 'fall');
     if (next === 'walk') {
       until = now + rand(2500, 6000);
       if (Math.random() < 0.35) dir *= -1;
@@ -260,6 +271,8 @@ document.addEventListener('keydown', (e) => {
     } else if (next === 'wave') {
       until = now + 1600;
       say(LINES[0]);
+    } else if (next === 'drag' || next === 'fall') {
+      until = Infinity;
     } else {
       until = now + rand(1000, 2800);
       if (Math.random() < 0.25) say(LINES[1 + Math.floor(Math.random() * 4)]);
@@ -267,10 +280,18 @@ document.addEventListener('keydown', (e) => {
   }
 
   function place() {
-    buddy.style.transform = `translateX(${x}px)`;
+    buddy.style.transform = `translate(${x}px, ${-y}px)`;
     buddy.style.setProperty('--dir', dir);
     buddy.classList.toggle('edge-l', x < 80);
     buddy.classList.toggle('edge-r', x > maxX() - 80);
+  }
+
+  function land() {
+    y = 0;
+    say(Math.abs(vy) > 900 ? '아야! 🤕' : '휴~ 살았다 😮‍💨');
+    if (Math.abs(vx) > 30) dir = Math.sign(vx);
+    vx = vy = 0;
+    setState('idle');
   }
 
   function tick(now) {
@@ -280,8 +301,16 @@ document.addEventListener('keydown', (e) => {
       x += dir * (state === 'run' ? 240 : 70) * dt;
       if (x <= 0) { x = 0; dir = 1; }
       if (x >= maxX()) { x = maxX(); dir = -1; }
+    } else if (state === 'fall') {
+      if (reduced) { land(); } else {
+        vy -= GRAVITY * dt;
+        x += vx * dt;
+        y += vy * dt;
+        if (x <= 0 || x >= maxX()) { x = clamp(x, 0, maxX()); vx *= -0.5; } // 벽에 튕기기
+        if (y <= 0) land();
+      }
     }
-    if (now > until) {
+    if (!reduced && now > until) {
       const r = Math.random();
       const moving = state === 'walk' || state === 'run';
       setState(moving ? (r < 0.2 ? 'wave' : 'idle') : (r < 0.35 ? 'run' : 'walk'), now);
@@ -290,21 +319,79 @@ document.addEventListener('keydown', (e) => {
     requestAnimationFrame(tick);
   }
 
-  buddy.addEventListener('click', () => {
+  function jump() {
     buddy.classList.remove('jumping');
     void buddy.offsetWidth; // 애니메이션 재시작
     buddy.classList.add('jumping');
-    say(LINES[Math.floor(Math.random() * LINES.length)]);
-    if (!reduced) setTimeout(() => setState('run', performance.now()), 550);
+    say(pick(LINES));
+    if (!reduced) setTimeout(() => { if (state !== 'drag' && state !== 'fall') setState('run'); }, 550);
+  }
+
+  /* ----- 잡아서 끌기 ----- */
+  function moveTo(cx, cy) {
+    const now = performance.now();
+    const nx = clamp(cx - press.offX, 0, maxX());
+    const ny = clamp(window.innerHeight - (cy - press.offY) - buddy.offsetHeight, 0, maxY());
+    const dt = Math.max(now - press.t, 8) / 1000;
+    press.vx = (nx - x) / dt;
+    press.vy = (ny - y) / dt;
+    press.t = now;
+    x = nx; y = ny;
+    place();
+  }
+
+  function grab(cx, cy) {
+    if (!press || press.dragged) return;
+    press.dragged = true;
+    buddy.classList.remove('jumping');
+    setState('drag');
+    say(pick(GRAB_LINES));
+    moveTo(cx, cy);
+  }
+
+  buddy.addEventListener('pointerdown', (e) => {
+    if (e.button > 0) return;
+    e.preventDefault();
+    try { buddy.setPointerCapture(e.pointerId); } catch {}
+    const r = buddy.getBoundingClientRect();
+    press = {
+      sx: e.clientX, sy: e.clientY,
+      offX: e.clientX - r.left, offY: e.clientY - r.top,
+      t: performance.now(), vx: 0, vy: 0, dragged: false,
+    };
+    press.timer = setTimeout(() => grab(press.sx, press.sy), HOLD_MS);
   });
+
+  buddy.addEventListener('pointermove', (e) => {
+    if (!press) return;
+    if (!press.dragged && Math.hypot(e.clientX - press.sx, e.clientY - press.sy) > 6) grab(e.clientX, e.clientY);
+    if (press.dragged) moveTo(e.clientX, e.clientY);
+  });
+
+  function release() {
+    if (!press) return;
+    clearTimeout(press.timer);
+    if (press.dragged) {
+      // 멈춘 채로 놓으면 던진 속도는 0
+      const stale = performance.now() - press.t > 80;
+      vx = stale ? 0 : clamp(press.vx, -1800, 1800);
+      vy = stale ? 0 : clamp(press.vy, -1800, 1800);
+      setState('fall');
+    } else {
+      jump();
+    }
+    press = null;
+  }
+  buddy.addEventListener('pointerup', release);
+  buddy.addEventListener('pointercancel', release);
+  buddy.addEventListener('contextmenu', (e) => e.preventDefault());
+
   buddy.addEventListener('animationend', (e) => {
     if (e.animationName === 'jump') buddy.classList.remove('jumping');
   });
-  window.addEventListener('resize', () => { x = Math.min(x, maxX()); place(); });
+  window.addEventListener('resize', () => { x = clamp(x, 0, maxX()); y = clamp(y, 0, maxY()); place(); });
 
   place();
-  if (!reduced) {
-    setState('wave', performance.now());
-    requestAnimationFrame(tick);
-  }
+  if (!reduced) setState('wave');
+  requestAnimationFrame(tick);
 })();
