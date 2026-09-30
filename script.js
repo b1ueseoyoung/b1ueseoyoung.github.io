@@ -87,7 +87,10 @@ $('#chunkInput').addEventListener('keydown', (e) => e.key === 'Enter' && runPipe
 $('#filters').addEventListener('click', (e) => {
   const btn = e.target.closest('.chip');
   if (!btn) return;
-  $$('#filters .chip').forEach((c) => c.classList.toggle('active', c === btn));
+  $$('#filters .chip').forEach((c) => {
+    c.classList.toggle('active', c === btn);
+    c.setAttribute('aria-pressed', String(c === btn));
+  });
   const f = btn.dataset.f;
   $$('#projectGrid .project').forEach((p) => {
     p.classList.toggle('hide', f !== 'all' && !p.dataset.tags.split(' ').includes(f));
@@ -175,15 +178,31 @@ function print(html) {
 const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
 let greeted = false;
+let lastFocus = null;
+// 터미널이 열려 있는 동안 뒤쪽 화면은 포커스와 클릭이 닿지 않게 막아요
+const setBackgroundInert = (on) => ['header.nav', 'main', '.footer', '#buddy'].forEach((s) => {
+  const el = $(s);
+  if (el) el.inert = on;
+});
 function openTerm() {
+  if (!term.hidden) return;
+  lastFocus = document.activeElement;
   term.hidden = false;
+  setBackgroundInert(true);
   if (!greeted) {
     print('<span class="dim">welcome! `help`를 입력해 보세요.</span>');
     greeted = true;
   }
   input.focus();
 }
-function closeTerm() { term.hidden = true; }
+function closeTerm() {
+  if (term.hidden) return;
+  term.hidden = true;
+  setBackgroundInert(false);
+  // 열기 전에 있던 곳으로 포커스를 돌려줘요 (스크롤 위치는 그대로)
+  if (lastFocus && lastFocus !== document.body && document.contains(lastFocus)) lastFocus.focus({ preventScroll: true });
+  lastFocus = null;
+}
 
 $('#termBtn').addEventListener('click', openTerm);
 $('#termClose').addEventListener('click', closeTerm);
@@ -198,7 +217,9 @@ $('#termForm').addEventListener('submit', (e) => {
   hIdx = history.length;
   print(`<span class="cmd">$ ${esc(raw)}</span>`);
   const [cmd, ...args] = raw.split(/\s+/);
-  const fn = COMMANDS[cmd.toLowerCase()];
+  const name = cmd.toLowerCase();
+  // constructor, __proto__ 같은 상속 속성은 명령어로 취급하지 않아요
+  const fn = Object.hasOwn(COMMANDS, name) ? COMMANDS[name] : null;
   const out = fn ? fn(args.join(' ')) : `command not found: ${esc(cmd)} — <span class="dim">help</span>를 입력해 보세요`;
   if (out) print(out);
 });

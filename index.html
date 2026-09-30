@@ -12,6 +12,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet" />
+  <script>try { const t = localStorage.getItem('theme'); if (t) document.documentElement.dataset.theme = t; } catch {}</script>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -66,7 +67,7 @@
           <li data-step="search"><b>RAG search</b><span>Lore DB 검색</span></li>
           <li data-step="judge"><b>judge</b><span>충돌 판정</span></li>
         </ol>
-        <div class="pc-out" id="pipeOut">▶ 실행 버튼을 눌러보세요</div>
+        <div class="pc-out" id="pipeOut" role="status">▶ 실행 버튼을 눌러보세요</div>
         <button class="btn primary small" id="runBtn">▶ 실행</button>
       </div>
     </section>
@@ -76,17 +77,17 @@
       <h2 class="section-title"><span>01</span> Core Focus</h2>
       <div class="grid three">
         <article class="card focus">
-          <div class="focus-icon">🧭</div>
+          <div class="focus-icon" aria-hidden="true">🧭</div>
           <h3>UX-first AI Design</h3>
           <p>FairyRAG · CO-DITOR처럼 사용자의 맥락을 출발점으로 AI 경험을 설계합니다.</p>
         </article>
         <article class="card focus">
-          <div class="focus-icon">🧩</div>
+          <div class="focus-icon" aria-hidden="true">🧩</div>
           <h3>System Architecture</h3>
           <p>Multi-Agent 파이프라인, State 관리, Lore Keeper / Co-Author 구조를 설계합니다.</p>
         </article>
         <article class="card focus">
-          <div class="focus-icon">🔬</div>
+          <div class="focus-icon" aria-hidden="true">🔬</div>
           <h3>Research → Production</h3>
           <p>논문 4편, KCC 2025 장려상, HCI Korea 2026 발표로 검증하고 실서비스로 구현합니다.</p>
         </article>
@@ -96,17 +97,17 @@
     <!-- PROJECTS -->
     <section id="projects" class="section">
       <h2 class="section-title"><span>02</span> Featured Projects</h2>
-      <div class="filters" id="filters">
-        <button class="chip active" data-f="all">전체</button>
-        <button class="chip" data-f="rag">RAG</button>
-        <button class="chip" data-f="agent">Agent</button>
-        <button class="chip" data-f="ml">ML</button>
-        <button class="chip" data-f="web">Web</button>
+      <div class="filters" id="filters" role="group" aria-label="프로젝트 필터">
+        <button class="chip active" data-f="all" aria-pressed="true">전체</button>
+        <button class="chip" aria-pressed="false" data-f="rag">RAG</button>
+        <button class="chip" aria-pressed="false" data-f="agent">Agent</button>
+        <button class="chip" aria-pressed="false" data-f="ml">ML</button>
+        <button class="chip" aria-pressed="false" data-f="web">Web</button>
       </div>
       <div class="grid two" id="projectGrid">
         <article class="card project" data-tags="rag web">
           <div class="p-top">
-            <span class="p-emoji">🧚</span>
+            <span class="p-emoji" aria-hidden="true">🧚</span>
             <span class="badge">KCC 2025 장려상</span>
           </div>
           <h3>꿈도깨비</h3>
@@ -121,7 +122,7 @@
 
         <article class="card project" data-tags="rag agent">
           <div class="p-top">
-            <span class="p-emoji">✍️</span>
+            <span class="p-emoji" aria-hidden="true">✍️</span>
             <span class="badge">Agentic RAG</span>
           </div>
           <h3>글벗 GeulBeot</h3>
@@ -135,7 +136,7 @@
 
         <article class="card project" data-tags="agent web">
           <div class="p-top">
-            <span class="p-emoji">🛒</span>
+            <span class="p-emoji" aria-hidden="true">🛒</span>
             <span class="badge">KT AIVLE</span>
           </div>
           <h3>SELLON</h3>
@@ -149,7 +150,7 @@
 
         <article class="card project" data-tags="ml">
           <div class="p-top">
-            <span class="p-emoji">🩺</span>
+            <span class="p-emoji" aria-hidden="true">🩺</span>
             <span class="badge">Healthcare</span>
           </div>
           <h3>1형 소아당뇨 예측 시스템</h3>
@@ -229,13 +230,13 @@
 
   <!-- TERMINAL -->
   <div class="term-backdrop" id="term" hidden>
-    <div class="term" role="dialog" aria-label="터미널">
+    <div class="term" role="dialog" aria-modal="true" aria-label="터미널">
       <div class="pc-head">
         <span class="dots"><i></i><i></i><i></i></span>
         <span class="pc-title">guest@b1ueseoyoung: ~</span>
         <button class="term-close" id="termClose" aria-label="닫기">✕</button>
       </div>
-      <div class="term-body" id="termBody"></div>
+      <div class="term-body" id="termBody" role="log" aria-label="터미널 출력"></div>
       <form class="term-line" id="termForm">
         <span class="prompt">$</span>
         <input id="termInput" autocomplete="off" spellcheck="false" aria-label="명령어 입력" />
@@ -247,7 +248,7 @@
   <div class="buddy" id="buddy" aria-hidden="true">
     <div class="buddy-inner">
       <div class="buddy-bubble" id="buddyBubble"></div>
-      <img class="buddy-face" src="face.png" alt="" draggable="false"
+      <img class="buddy-face" src="face.webp" alt="" draggable="false"
            onerror="this.onerror=null;this.src='https://avatars.githubusercontent.com/u/174824837?v=4';this.classList.add('fallback')" />
       <svg class="buddy-body" viewBox="0 0 50 72">
         <line x1="25" y1="0" x2="25" y2="36" />
@@ -259,7 +260,7 @@
     </div>
   </div>
 
-  <div class="toast" id="toast"></div>
+  <div class="toast" id="toast" role="status"></div>
   <script src="script.js"></script>
 </body>
 </html>

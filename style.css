@@ -7,8 +7,8 @@
   --line: #dde3ef;
   --blue: #2f5bff;
   --blue-soft: #e3e9ff;
-  --ok: #12a36b;
-  --warn: #e0453a;
+  --ok: #0b7a4f;
+  --warn: #c0312a;
   --shadow: 0 1px 2px rgba(18, 24, 38, .04), 0 8px 24px rgba(18, 24, 38, .06);
   --radius: 16px;
   --mono: "IBM Plex Mono", ui-monospace, monospace;
@@ -97,6 +97,7 @@ h1 { font-size: clamp(2.1rem, 5vw, 3.4rem); line-height: 1.22; font-weight: 900;
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .btn.primary { color: #0b0f1a; } }
 .btn.small { padding: 8px 16px; font-size: .88rem; }
 .hint { margin-top: 20px; font-size: .85rem; color: var(--muted); }
+@media (hover: none) { .hint { display: none; } } /* 터치 기기에는 / 키가 없어요 */
 
 /* PIPELINE TOY */
 .pipeline-card {
@@ -155,9 +156,10 @@ h1 { font-size: clamp(2.1rem, 5vw, 3.4rem); line-height: 1.22; font-weight: 900;
 .grid.two { grid-template-columns: repeat(2, 1fr); }
 .card {
   background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
-  padding: 26px; box-shadow: var(--shadow); transition: transform .2s, border-color .2s;
+  padding: 26px; box-shadow: var(--shadow); transition: translate .2s, border-color .2s;
 }
-.card:hover { transform: translateY(-4px); border-color: var(--blue); }
+/* hover는 translate 속성으로 띄워서 .reveal의 transform과 부딪히지 않게 해요 */
+.card:hover { translate: 0 -4px; border-color: var(--blue); }
 .card h3 { font-size: 1.15rem; margin-bottom: 8px; }
 .card p { color: var(--muted); font-size: .95rem; }
 .focus-icon { font-size: 1.8rem; margin-bottom: 14px; }
@@ -169,6 +171,13 @@ h1 { font-size: clamp(2.1rem, 5vw, 3.4rem); line-height: 1.22; font-weight: 900;
   background: var(--surface); font-size: .85rem; color: var(--muted);
 }
 .chip.active, .chip:hover { background: var(--blue); border-color: var(--blue); color: #fff; }
+/* 다크 모드의 밝은 파랑·초록 바탕 위에는 어두운 글자를 써요 (대비 4.5:1 이상) */
+:root[data-theme="dark"] .chip.active, :root[data-theme="dark"] .chip:hover,
+:root[data-theme="dark"] .pipeline li.active::before, :root[data-theme="dark"] .pipeline li.done::before { color: #0b0f1a; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .chip.active, :root:not([data-theme="light"]) .chip:hover,
+  :root:not([data-theme="light"]) .pipeline li.active::before, :root:not([data-theme="light"]) .pipeline li.done::before { color: #0b0f1a; }
+}
 .project { display: flex; flex-direction: column; }
 .project.hide { display: none; }
 .p-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
@@ -232,7 +241,7 @@ h1 { font-size: clamp(2.1rem, 5vw, 3.4rem); line-height: 1.22; font-weight: 900;
 }
 .term-backdrop[hidden] { display: none; }
 .term {
-  width: min(640px, 100%); height: min(440px, 80vh); display: flex; flex-direction: column;
+  width: min(640px, 100%); height: min(440px, 80vh); height: min(440px, 80dvh); display: flex; flex-direction: column;
   background: #0d1220; color: #d7deee; border-radius: 14px; overflow: hidden;
   border: 1px solid #26304a; box-shadow: 0 24px 64px rgba(0,0,0,.4);
   font-family: var(--mono); font-size: .88rem;
@@ -258,9 +267,14 @@ h1 { font-size: clamp(2.1rem, 5vw, 3.4rem); line-height: 1.22; font-weight: 900;
 /* reveal */
 .reveal { opacity: 0; transform: translateY(18px); transition: opacity .6s, transform .6s; }
 .reveal.in { opacity: 1; transform: none; }
+.card.reveal { transition: opacity .6s, transform .6s, translate .2s, border-color .2s; }
 
 @media (max-width: 860px) {
-  .nav nav { display: none; }
+  /* 모바일에서는 메뉴를 숨기지 않고 헤더 아래 줄에 가로 스크롤로 보여줘요 */
+  html { scroll-padding-top: 116px; }
+  .nav { flex-wrap: wrap; row-gap: 8px; }
+  .nav nav { order: 3; width: 100%; gap: 18px; overflow-x: auto; white-space: nowrap; scrollbar-width: none; font-size: .88rem; }
+  .nav nav::-webkit-scrollbar { display: none; }
   .hero { grid-template-columns: 1fr; min-height: auto; padding: 48px 0 64px; gap: 40px; }
   .grid.three, .grid.two, .research-wrap { grid-template-columns: 1fr; }
   .stack-row { grid-template-columns: 1fr; gap: 10px; }
