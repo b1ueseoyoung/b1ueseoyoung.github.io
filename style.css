@@ -37,9 +37,9 @@
   --text-lg: 1.25rem;
   --text-xl: clamp(1.5rem, 1.28rem + .9vw, 1.875rem);
   --text-2xl: clamp(1.625rem, 1.3rem + 1.3vw, 2.125rem);
-  --text-hero: clamp(1.75rem, 1.02rem + 3vw, 2.75rem);
+  --text-hero: clamp(1.875rem, 1.05rem + 3.4vw, 3.25rem);
   --text-display: clamp(1.625rem, .85rem + 3.3vw, 3rem);
-  --text-metric: clamp(2rem, 1.6rem + 1.6vw, 2.75rem);
+  --text-metric: clamp(1.5rem, 1.28rem + .9vw, 1.875rem);
   --lh-display: 1.1;
   --lh-tight: 1.25;
   --lh-snug: 1.5;
@@ -308,8 +308,8 @@ kbd {
   grid-area: title; max-width: var(--measure-title); margin-top: var(--space-3);
   font-size: var(--text-hero); font-weight: 700;
 }
-/* 구 사이에서만 줄이 바뀌어요 */
-.hero h1 .phrase { display: inline-block; }
+/* 쉼표 뒤에서 항상 줄을 바꿔요 */
+.hero h1 .phrase { display: block; }
 .hero-sub { grid-area: sub; max-width: var(--measure-m); margin-top: var(--space-4); font-size: var(--text-md); color: var(--muted); }
 .hero-cta { grid-area: cta; align-self: start; justify-self: start; margin-top: var(--space-5); margin-bottom: var(--space-6); }
 /* 쫄라맨과 말풍선이 들어갈 높이를 비워 둬요 */

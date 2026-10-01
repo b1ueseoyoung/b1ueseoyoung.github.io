@@ -184,7 +184,7 @@ const COMMANDS = {
     'KCC 2025 학부생 장려상 (FairyRAG)',
     'HCI Korea 2026 구두 발표 (CO-DITOR)',
     '논문 4편: FairyRAG, CO-DITOR, Co-Narrator, PA-RAG',
-    '한성대 컴공 IRIS Lab 산학공동연구, 학부연구생 (진행 중)',
+    '한성대 컴퓨터공학부 IRIS Lab 산학공동연구, 학부연구생 (진행 중)',
     'KT AIVLE School 9기 (AI 트랙, 반장)',
   ].join('\n'),
   stack: () => 'python  java  fastapi  spring-boot\npytorch  tensorflow  scikit-learn  stable-diffusion\nlangchain  langgraph  rag  multi-agent  mcp  openai-api  faiss  chromadb  langsmith\naws-ec2  aws-s3',
