@@ -156,7 +156,7 @@ const body = $('#termBody');
 const input = $('#termInput');
 const cmdHistory = [];
 let hIdx = 0;
-const SECTIONS = ['projects', 'focus', 'research', 'stack', 'contact'];
+const SECTIONS = ['projects', 'focus', 'research', 'stack', 'side', 'contact'];
 
 const COMMANDS = {
   help: () => [

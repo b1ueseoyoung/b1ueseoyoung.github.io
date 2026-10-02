@@ -40,6 +40,7 @@
         <a href="#focus">집중 분야</a>
         <a href="#research">연구</a>
         <a href="#stack">스택</a>
+        <a href="#side">사이드</a>
         <a href="#contact">연락하기</a>
       </nav>
       <div class="header-actions">
@@ -486,6 +487,85 @@
           <div><dt>Tools</dt><dd>Git, GitHub, Notion, Jupyter, Discord</dd></div>
           <div><dt>공부 중</dt><dd>정보처리기사, 정보보안기사, AWS Cloud</dd></div>
         </dl>
+      </div>
+    </section>
+
+    <!-- 사이드 프로젝트: 이름을 누르면 하나씩 펼쳐져요 -->
+    <section id="side" aria-labelledby="sideTitle">
+      <div class="container section-pad ruled" data-reveal>
+        <h2 id="sideTitle">사이드 프로젝트</h2>
+        <p class="side-lead">회사에서 진행한 개인 사이드 프로젝트입니다. 이름을 누르면 하나씩 펼쳐집니다.</p>
+        <div class="sides">
+          <details class="side" name="side" open>
+            <summary>
+              <h3>기획 메모 진단</h3>
+              <span class="side-line">웹툰·만화 기획 메모를 붙여넣으면 설정을 정리하고, 가장 먼저 손볼 점을 알려 주는 도구</span>
+            </summary>
+            <div class="side-body">
+              <figure class="fig">
+                <a class="fig-frame" href="https://side-project-gamma.vercel.app/demo" target="_blank" rel="noopener">
+                  <img src="assets/side-memo-demo.webp" width="1600" height="1125" loading="lazy" decoding="async"
+                       alt="기획 메모 진단의 예시 리포트 화면. 왼쪽에는 근거로 인용된 문장에 색이 칠해진 기획 메모와 항목 이름표가, 오른쪽에는 총평, 가장 먼저 고칠 3가지, 좋은 점, 설정 정리, 항목별 신호등이 있다. 누르면 새 탭에서 데모가 열립니다." />
+                </a>
+                <figcaption>로그인 없이 열리는 데모의 예시 리포트입니다. 새로 쓴 기획 메모를 실제로 한 번 진단한 결과이며, 이미지를 누르면 데모가 열립니다.</figcaption>
+              </figure>
+              <div class="side-text">
+                <dl class="meta">
+                  <div><dt>대상</dt><dd>투고를 준비하는 웹툰·만화 지망생</dd></div>
+                  <div><dt>기술</dt><dd>Next.js 16, TypeScript, Tailwind CSS 4, OpenAI Responses API, Neon Postgres, Drizzle ORM</dd></div>
+                </dl>
+                <h4>하는 일</h4>
+                <p>러프하게 쓴 기획 메모를 붙여넣으면 설정을 정리하고, 상업성, 캐릭터, 서사, 웹툰 연재 작법, 참고작과 겹치는 부분을 진단해 가장 먼저 손볼 점을 알려 줍니다.</p>
+                <h4>설계 원칙</h4>
+                <ul>
+                  <li>결과를 합격 확률 같은 숫자가 아니라 신호등과 근거&#8288;(메모 속 문장 인용)&#8288;로 보여 줍니다.</li>
+                  <li>모델이 붙인 인용은 코드에서 메모 원문과 대조하고, 원문에 없는 인용은 버립니다.</li>
+                  <li>설정이나 줄거리를 대신 지어 주지 않고, 문제와 방향만 짚습니다.</li>
+                </ul>
+                <div class="side-actions">
+                  <a class="btn primary" href="https://side-project-gamma.vercel.app/demo" target="_blank" rel="noopener"><span class="visually-hidden">기획 메모 진단 </span>데모 열기<svg class="icon" aria-hidden="true"><use href="#i-arrow-up-right" /></svg><span class="visually-hidden"> (새 탭)</span></a>
+                  <a class="btn" href="https://github.com/b1ueseoyoung/side-project" target="_blank" rel="noopener"><svg class="icon" aria-hidden="true"><use href="#i-github" /></svg><span class="visually-hidden">기획 메모 진단 </span>저장소<span class="visually-hidden"> (새 탭)</span></a>
+                </div>
+                <p class="block-note">데모에서는 진단 실행과 삭제가 막혀 있습니다.</p>
+              </div>
+            </div>
+          </details>
+
+          <details class="side" name="side">
+            <summary>
+              <h3>오늘 대시보드</h3>
+              <span class="side-line">일정, 노션 할 일, GitHub 활동, 터미널 작업을 한곳에 모아 하루의 진행 상황을 보여 주는 개인 대시보드</span>
+            </summary>
+            <div class="side-body">
+              <figure class="fig">
+                <a class="fig-frame" href="assets/today-dashboard-report.pdf" target="_blank" rel="noopener">
+                  <img src="assets/side-dashboard-home.webp" width="1600" height="1008" loading="lazy" decoding="async"
+                       alt="오늘 대시보드의 홈 화면. 왼쪽에 메뉴와 달력이, 오른쪽에 할 일 진행률, 다음 일정까지 남은 시간, 오늘 커밋 수, 24시간 타임라인, 오늘 할 일, GitHub 활동, 오늘의 레딧, AI 브리핑 카드가 있다. 누르면 새 탭에서 보고서 PDF가 열립니다." />
+                </a>
+                <figcaption>보고서에 실린 홈 화면입니다. 이미지를 누르면 보고서&#8288;(PDF)&#8288;가 열립니다.</figcaption>
+              </figure>
+              <div class="side-text">
+                <dl class="meta">
+                  <div><dt>실행</dt><dd>내 맥에서만 (웹 화면과 터미널 화면)</dd></div>
+                  <div><dt>기술</dt><dd>Bun, TypeScript, React, Tailwind CSS, shadcn/ui</dd></div>
+                </dl>
+                <h4>하는 일</h4>
+                <p>오늘 일정, 노션 할 일, GitHub 활동, 터미널 작업을 한곳에 모아 하루가 얼마나 진행됐는지 보여 줍니다. 레딧의 AI 서브레딧 인기 글을 매일 모아 한국어로 옮기고, 로컬 Claude Code가 아침 브리핑, 하루 마무리, 주간 업무 리포트를 만듭니다. 모델 실험실에서는 공개 검증 문항과 업무 과제로 Claude와 Codex&#8288;(GPT)&#8288; 모델을 비교합니다.</p>
+                <h4>설계 원칙</h4>
+                <ul>
+                  <li>내 맥 안에서만 돕니다. 서버는 <code>127.0.0.1</code>에만 열고 배포하지 않습니다.</li>
+                  <li>공식 API, 공식 RSS, 맥 안의 데이터만 읽고 크롤링은 하지 않습니다.</li>
+                  <li>AI는 API 키 없이 구독 로그인으로 돌립니다.</li>
+                </ul>
+                <div class="side-actions">
+                  <a class="btn primary" href="assets/today-dashboard-report.pdf" target="_blank" rel="noopener"><span class="visually-hidden">오늘 대시보드 </span>보고서 보기<svg class="icon" aria-hidden="true"><use href="#i-arrow-up-right" /></svg><span class="visually-hidden"> (PDF, 새 탭)</span></a>
+                  <a class="btn" href="assets/today-dashboard-report.pdf" download="오늘-대시보드-보고서.pdf"><span class="visually-hidden">오늘 대시보드 보고서 </span>PDF 저장</a>
+                </div>
+                <p class="block-note">기능과 흐름을 정리한 보고서 초안입니다. PDF 17쪽, 약 5MB.</p>
+              </div>
+            </div>
+          </details>
+        </div>
       </div>
     </section>
 

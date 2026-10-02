@@ -1,7 +1,7 @@
 /* ==========================================================================
    b1ueseoyoung 포트폴리오, 2안
    1 토큰  2 기본  3 공용 부품  4 헤더  5 히어로와 쫄라맨  6 프로젝트
-   7 창(Lore Keeper, 터미널)  8 집중 분야, 연구, 스택, 연락  9 오버레이  10 모션
+   7 창(Lore Keeper, 터미널)  8 집중 분야, 연구, 스택, 사이드 프로젝트, 연락  9 오버레이  10 모션
    규칙과 근거는 DESIGN.md에 있다.
    ========================================================================== */
 
@@ -502,7 +502,7 @@ a.fig-frame:hover { border-color: var(--accent); }
 .more { margin-top: var(--space-6); border-top: var(--hair) solid var(--line); }
 .more summary { display: flex; align-items: center; min-height: var(--tap); cursor: pointer; font-size: var(--text-sm); font-weight: 600; }
 .more summary:hover { color: var(--accent); }
-.more summary::-webkit-details-marker { display: none; }
+.more summary::-webkit-details-marker, .side summary::-webkit-details-marker { display: none; }
 .more summary::after { content: "+"; margin-left: auto; font-family: var(--font-mono); font-size: var(--text-base); color: var(--muted); }
 .more[open] summary::after { content: "\2212"; }
 .steps + .block-note { margin-top: var(--space-3); }
@@ -668,7 +668,7 @@ a.fig-frame:hover { border-color: var(--accent); }
 .prompt { color: var(--accent); }
 .term-line input { flex: 1; min-width: 0; min-height: var(--control-h); border: 0; outline: none; background: none; font-size: var(--text-base); }
 
-/* ---------- 8. 집중 분야, 연구, 스택, 연락 ---------- */
+/* ---------- 8. 집중 분야, 연구, 스택, 사이드 프로젝트, 연락 ---------- */
 .focus { background: var(--accent-soft); }
 .focus-grid { display: grid; gap: var(--space-6); padding-block: var(--section-y); }
 .quote {
@@ -710,7 +710,36 @@ a.fig-frame:hover { border-color: var(--accent); }
 @media (min-width: 40rem) { .stack-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (min-width: 64rem) { .stack-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 
-.contact-lead { margin-top: var(--space-3); color: var(--muted); }
+/* 사이드 프로젝트: 한 번에 하나만 펼쳐지는 행. 이름과 한 줄 소개를 누르면 화면과 설명이 열려요 */
+.sides { margin-top: var(--space-5); border-bottom: var(--hair) solid var(--line); }
+.side { border-top: var(--hair) solid var(--line); }
+.side summary {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center;
+  gap: var(--space-1) var(--space-5); padding-block: var(--space-4); cursor: pointer;
+}
+.side summary > * { grid-column: 1; }
+.side summary::after {
+  content: "+"; grid-column: 2; grid-row: 1 / span 2;
+  font-family: var(--font-mono); font-size: var(--text-lg); color: var(--muted);
+}
+.side[open] summary::after { content: "\2212"; }
+.side h3 { font-size: var(--text-lg); font-weight: 600; line-height: var(--lh-snug); transition: color var(--dur-1); }
+.side summary:hover h3, .side[open] h3 { color: var(--accent); }
+.side-line { font-size: var(--text-sm); line-height: var(--lh-snug); color: var(--muted); }
+.side-body { display: grid; gap: var(--space-6) var(--col-gap); padding-block: var(--space-2) var(--space-7); }
+.side-body .fig { margin-top: 0; }
+/* 앱 화면 캡처는 테두리까지 꽉 채워요 */
+.side-body .fig-frame { padding: 0; }
+.side-text .meta { margin-top: 0; }
+.side-text h4 { margin-top: var(--space-5); margin-bottom: var(--space-1); }
+.side-text p { max-width: var(--measure-l); }
+.side-text ul { list-style: disc; display: grid; gap: var(--space-1); padding-left: var(--space-5); font-size: var(--text-sm); }
+.side-text li::marker { color: var(--muted); }
+@media (min-width: 64rem) {
+  .side-body { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); align-items: start; }
+}
+
+.contact-lead, .side-lead { margin-top: var(--space-3); color: var(--muted); }
 .contact-mail {
   display: inline-block; margin-top: var(--space-2); padding-block: var(--space-2);
   font-size: var(--text-display); font-weight: 600; line-height: var(--lh-tight); letter-spacing: var(--tracking-display);
@@ -719,7 +748,7 @@ a.fig-frame:hover { border-color: var(--accent); }
   text-decoration-color: transparent; transition: text-decoration-color var(--dur-2);
 }
 .contact-mail:hover { text-decoration-color: currentColor; }
-.contact-actions { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-5); }
+.contact-actions, .side-actions { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-5); }
 
 .site-footer { border-top: var(--hair) solid var(--line); }
 .site-footer .container { padding-block: var(--space-5); font-size: var(--text-xs); color: var(--muted); }
