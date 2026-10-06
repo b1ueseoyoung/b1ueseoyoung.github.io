@@ -599,6 +599,40 @@
               </div>
             </div>
           </details>
+
+          <details class="side" name="side">
+            <summary>
+              <h3>꿈도깨비 리뉴얼 — 아이가 주인공이 되는 AI 그림책</h3>
+              <span class="side-line">아이 사진과 선택을 반영해 아이가 주인공인 그림책을 만드는 웹 서비스</span>
+            </summary>
+            <div class="side-body">
+              <figure class="fig">
+                <a class="fig-frame" href="assets/side-boogie-story.webp" target="_blank" rel="noopener">
+                  <img src="assets/side-boogie-story.webp" width="1600" height="1000" loading="lazy" decoding="async"
+                       alt="꿈도깨비 리뉴얼의 이야기 진행 화면. 왼쪽에 바닷속에서 빛나는 조개껍데기에 손을 뻗는 주인공 삽화가, 오른쪽에 장면 글과 '서영은 움직이는 조개껍데기 옆에서 무엇을 따라가 볼까요?'라는 질문이, 아래에 선택지 세 개(푸른 게, 은빛 물고기, 노란 해마)가 있다. 누르면 새 탭에서 크게 열립니다." />
+                </a>
+                <figcaption>이야기 진행 화면입니다. 장면마다 글과 삽화 아래에서 다음 전개를 셋 중 하나로 고릅니다. 실제로 만든 동화 &lsquo;바다의 심장&rsquo;의 첫 장면이며, 이미지를 누르면 크게 열립니다.</figcaption>
+              </figure>
+              <div class="side-text">
+                <dl class="meta">
+                  <div><dt>대상</dt><dd>7~9세 아이와 보호자</dd></div>
+                  <div><dt>기술</dt><dd>React 18, Spring Boot 3.4, MySQL, FastAPI, codex CLI</dd></div>
+                </dl>
+                <h4>하는 일</h4>
+                <p>캡스톤 때 만든 <a class="link" href="#kkumdo">꿈도깨비</a>를 구조는 그대로 두고 다시 만들었습니다. 사진 1장으로 기준 캐릭터 후보를 만들고, 보호자가 승인하면 그 캐릭터가 이후 모든 장면의 참조가 됩니다. 장르와 장소를 고른 뒤 장면마다 선택지 3개 중 하나를 고르면 다음 장면의 글과 삽화가 만들어지고, 완성된 동화는 읽기 화면에서 낭독하고 책장에 보관합니다.</p>
+                <h4>설계 원칙</h4>
+                <ul>
+                  <li>유료 API 키 없이 ChatGPT 로그인 상태의 codex로 글과 그림을 만듭니다.</li>
+                  <li>장면이 뜨면 선택지별 다음 장면을 미리 만들어, 고른 뒤 기다리는 시간을 줄입니다.</li>
+                  <li>거절, 시간 초과, 한도 소진 같은 실패 사유를 화면까지 전달하고 다음 행동을 보여 줍니다.</li>
+                  <li>기존 방식&#8288;(ComfyUI)&#8288;과 GPT Image 참조 방식 세 가지를 같은 조건으로 비교하는 실험 도구와 블라인드 검토 화면을 함께 만들었습니다.</li>
+                </ul>
+                <div class="side-actions">
+                  <a class="btn primary" href="https://github.com/b1ueseoyoung/boogie-renewal" target="_blank" rel="noopener"><svg class="icon" aria-hidden="true"><use href="#i-github" /></svg><span class="visually-hidden">꿈도깨비 리뉴얼 </span>저장소<span class="visually-hidden"> (새 탭)</span></a>
+                </div>
+              </div>
+            </div>
+          </details>
         </div>
       </div>
     </section>
