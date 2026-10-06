@@ -730,6 +730,9 @@ a.fig-frame:hover { border-color: var(--accent); }
 .side-body .fig { margin-top: 0; }
 /* 앱 화면 캡처는 테두리까지 꽉 채워요 */
 .side-body .fig-frame { padding: 0; }
+/* 작은 픽셀 그림은 2배까지만 키우고 픽셀을 뭉개지 않아요 */
+.side-body .fig-pixel { padding: var(--space-5); }
+.fig-pixel img { width: min(100%, 560px); margin-inline: auto; image-rendering: pixelated; }
 .side-text .meta { margin-top: 0; }
 .side-text h4 { margin-top: var(--space-5); margin-bottom: var(--space-1); }
 .side-text p { max-width: var(--measure-l); }

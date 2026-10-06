@@ -633,6 +633,38 @@
               </div>
             </div>
           </details>
+
+          <details class="side" name="side">
+            <summary>
+              <h3>Focus Buddy — 집중하는 동안 옆에서 잠드는 고양이</h3>
+              <span class="side-line">맥 메뉴&nbsp;막대와 화면 위 작은 위젯에서 도는 픽셀 고양이 뽀모도로 앱</span>
+            </summary>
+            <div class="side-body">
+              <figure class="fig">
+                <div class="fig-frame fig-pixel">
+                  <img src="assets/side-focus-buddy.png" width="280" height="310" loading="lazy" decoding="async"
+                       alt="크림색 패널 위에 주황 줄무늬 픽셀 고양이가 엎드려 자고 있다. 패널에는 일시정지, 남은 시간 25:00, 재개 버튼, 초기화, 집중 횟수를 나타내는 네모 4개, 설정 버튼이 있다." />
+                </div>
+                <figcaption>실제 앱의 위젯 화면이며, 일시정지 상태입니다.</figcaption>
+              </figure>
+              <div class="side-text">
+                <dl class="meta">
+                  <div><dt>실행</dt><dd>내 맥에서만 (메뉴&nbsp;막대 앱, Apple Silicon)</dd></div>
+                  <div><dt>기술</dt><dd>Electron, React, TypeScript, Swift&#8288;(AppKit)&#8288;, Bun</dd></div>
+                </dl>
+                <h4>하는 일</h4>
+                <p>집중 25분, 휴식 5분, 집중 4회마다 긴 휴식 15분으로 돌고, 50/10/20분 프리셋이나 직접 정한 시간도 쓸 수 있습니다. 남은 시간은 메뉴&nbsp;막대에 늘 보이고, 원하면 화면 위 위젯을 켭니다. 집중하는 동안 고양이는 자면서 5분마다 코를 골고, 휴식이 되면 깨어나 기지개를 켠 뒤 쉽니다. 오늘 한 집중은 할 일 이름과 함께 기록됩니다.</p>
+                <h4>설계 원칙</h4>
+                <ul>
+                  <li>타이머는 하나만 두고, 메뉴&nbsp;막대, 위젯, 기본 화면이 같은 상태를 봅니다.</li>
+                  <li>다음 단계로 저절로 넘어가지 않고, 직접 눌러 시작합니다.</li>
+                  <li>앱을 끄거나 맥이 잠들면 진행 중인 세션을 일시정지해 저장하고, 다시 켜면 이어 합니다.</li>
+                  <li>Electron 메뉴&nbsp;막대 아이콘이 화면에 보이지 않는 문제를 Swift&#8288;(AppKit)&#8288;로 만든 작은 도우미로 풀었습니다.</li>
+                </ul>
+                <p class="block-note">Open-LLM-VTuber-Web을 바탕으로 만들었습니다. 고양이는 글로만 요청해 GPT로 그린 뒤 15프레임 동작으로 다듬었고, 코 고는 소리는 기본으로 꺼져 있습니다. 저장소와 설치 파일은 공개하지 않았습니다.</p>
+              </div>
+            </div>
+          </details>
         </div>
       </div>
     </section>
