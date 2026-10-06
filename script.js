@@ -181,7 +181,7 @@ const COMMANDS = {
     '<span class="dim">자세한 내용은 goto projects, 데모는 run</span>',
   ].join('\n'),
   research: () => [
-    'KCC 2025 학부생 장려상 (FairyRAG)',
+    'KSC 2025 학부생 장려상 (FairyRAG)',
     'HCI Korea 2026 구두 발표 (CO-DITOR)',
     '논문 4편: FairyRAG, CO-DITOR, Co-Narrator, PA-RAG',
     '한성대 컴퓨터공학부 IRIS Lab 산학공동연구, 학부연구생 (진행 중)',
