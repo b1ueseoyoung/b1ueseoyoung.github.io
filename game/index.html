@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <script>
+    // /game 처럼 끝에 /가 없으면 상대경로(이미지, game.js)가 깨지므로 /game/으로 옮긴다.
+    if (!/\/$|\.html$/.test(location.pathname)) location.replace(location.pathname + '/' + location.search + location.hash);
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>빙글빙글 그림책</title>
+  <meta name="description" content="쓰러뜨린 살림살이가 떨군 낱말로 문장을 지으면 그 문장이 무기가 되는 그림책 뱀서류" />
+  <meta name="theme-color" content="#FBF5EA" />
+  <meta property="og:title" content="빙글빙글 그림책" />
+  <meta property="og:description" content="문장이 무기가 되는 그림책 뱀서류. 하룻밤을 버티면 그 판이 그림책 한 권으로 남아요." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <!-- 손글씨 폰트는 화면을 막지 않게 늦게 붙인다 -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&display=swap" media="print" onload="this.media='all'" />
+  <style>
+    :root {
+      --paper: #fbf5ea;
+      --surface: #fffdf8;
+      --surface2: #f4ead9;
+      --line: #e2d3bb;
+      --ink: #2f2620;
+      --ink-soft: #6b5d52;
+      --blue: #2f5bff;
+      --blue-deep: #1b3bd1;
+      --blue-pale: #e3e9ff;
+      --sun: #f7c548;
+      --leaf: #5b8f4e;
+      --red: #c62d20;
+      --hand: 'Gaegu', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+      --body: system-ui, -apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans KR', sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; height: 100%; background: var(--paper); color: var(--ink); font-family: var(--body); overflow: hidden; }
+    body { -webkit-tap-highlight-color: transparent; }
+    #game { position: fixed; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; }
+    [hidden] { display: none !important; }
+    button { font: inherit; color: inherit; cursor: pointer; }
+    kbd { font-family: var(--body); font-size: 0.75em; padding: 0.1em 0.45em; border: 1px solid currentColor; border-radius: 6px; opacity: 0.75; margin-left: 0.4em; }
+
+    .screen { position: fixed; inset: 0; display: grid; place-items: center; padding: 16px; z-index: 5; }
+    .overlay { background: rgba(251, 245, 234, 0.82); backdrop-filter: blur(2px); }
+
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.3em; min-height: 48px; padding: 0 1.2em; border-radius: 14px; border: 2px solid var(--ink); background: var(--surface); font-weight: 700; box-shadow: 0 3px 0 var(--ink); transition: transform 0.08s, box-shadow 0.08s; }
+    .btn:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--ink); }
+    .btn.primary { background: var(--blue); color: #fff; border-color: var(--blue-deep); box-shadow: 0 3px 0 var(--blue-deep); }
+    .btn:focus-visible, .card:focus-visible, input:focus-visible { outline: 3px solid var(--sun); outline-offset: 2px; }
+
+    /* 표지: 그림은 오른쪽, 책 카드는 왼쪽 위 빈자리에 */
+    .cover { place-items: center start; padding-left: clamp(16px, 6vw, 96px); background: var(--paper) url('assets/images/backgrounds/cover.webp') 70% center / cover no-repeat; }
+    .cover .book { width: min(480px, 100%); background: rgba(255, 253, 248, 0.94); border: 2px solid var(--ink); border-radius: 10px 22px 22px 10px; padding: clamp(24px, 5vw, 44px); box-shadow: -10px 0 0 var(--leaf) inset, 0 10px 0 rgba(47, 38, 32, 0.12); text-align: center; }
+    .kicker { margin: 0 0 8px; color: var(--ink-soft); font-size: 15px; }
+    .title { margin: 0 0 22px; font-family: var(--hand); font-weight: 700; font-size: clamp(40px, 9vw, 64px); line-height: 1.02; letter-spacing: -0.5px; }
+    .title #coverName { color: var(--blue); }
+    .name-field { display: inline-flex; align-items: center; gap: 10px; margin-bottom: 16px; color: var(--ink-soft); font-size: 15px; }
+    .name-field input { width: 7em; height: 44px; padding: 0 12px; border: 2px solid var(--line); border-radius: 12px; background: var(--paper); font: 700 22px var(--hand); color: var(--ink); text-align: center; }
+    .cover .btn.primary { width: 100%; font-size: 18px; }
+    .hint { margin: 14px 0 0; color: var(--ink-soft); font-size: 14px; }
+    .meta-line { margin: 6px 0 0; color: var(--ink-soft); font-size: 13px; min-height: 1em; }
+    .back { position: fixed; left: 12px; top: 10px; color: var(--ink); background: rgba(255, 253, 248, 0.85); border-radius: 10px; padding: 6px 10px; text-decoration: none; font-size: 14px; z-index: 6; }
+    .back:hover { color: var(--blue); }
+
+    /* 화면 위 정보 */
+    #hud { position: fixed; inset: 0; pointer-events: none; z-index: 3; }
+    .xp { position: absolute; left: 0; right: 0; top: 0; height: 6px; background: rgba(226, 211, 187, 0.7); }
+    .xp > i { display: block; height: 100%; width: 0; background: var(--blue); transition: width 0.15s; }
+    .hud-top { position: absolute; left: 0; right: 0; top: 12px; display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; padding: 0 14px; }
+    .hearts { display: flex; gap: 4px; flex-wrap: wrap; max-width: 30%; }
+    .heart { width: 20px; height: 18px; background: var(--red); clip-path: path('M10 18 L1.6 9.6 A4.9 4.9 0 0 1 10 3 A4.9 4.9 0 0 1 18.4 9.6 Z'); }
+    .heart.empty { background: var(--line); }
+    .lines { margin: 0; padding: 0; list-style: none; display: grid; gap: 2px; justify-items: center; font-family: var(--hand); font-weight: 700; font-size: clamp(16px, 2.3vw, 24px); text-align: center; }
+    .lines li { padding: 0 10px; background: rgba(255, 253, 248, 0.82); border-radius: 10px; box-shadow: 0 -0.32em 0 var(--blue-pale) inset; }
+    .lines li:first-child { font-size: 1.12em; }
+    .right { display: grid; justify-items: end; gap: 2px; font-variant-numeric: tabular-nums; font-weight: 700; font-size: 15px; }
+    .right .lv { color: var(--blue); }
+    .adverbs { position: absolute; left: 14px; bottom: 12px; font-family: var(--hand); font-weight: 700; font-size: 18px; color: var(--ink-soft); }
+
+    /* 레벨업 카드 */
+    #levelup h2, .panel h2 { margin: 0 0 16px; font-family: var(--hand); font-size: clamp(30px, 6vw, 42px); text-align: center; }
+    .lv-wrap { width: min(880px, 100%); }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+    .card { position: relative; display: grid; gap: 6px; align-content: start; text-align: left; padding: 18px 16px 16px; min-height: 150px; background: var(--surface); border: 2px solid var(--ink); border-radius: 16px; box-shadow: 0 4px 0 var(--ink); }
+    .card:hover { background: var(--blue-pale); }
+    .card .num { position: absolute; right: 12px; top: 10px; width: 26px; height: 26px; display: grid; place-items: center; border-radius: 50%; background: var(--sun); font-weight: 700; font-size: 14px; }
+    .card .tag { font-size: 13px; color: var(--ink-soft); font-weight: 700; }
+    .card strong { font-family: var(--hand); font-size: 28px; line-height: 1.1; color: var(--blue); }
+    .card .desc { font-size: 14px; color: var(--ink-soft); line-height: 1.45; }
+    .lv-wrap .hint { text-align: center; }
+
+    /* 일시정지·결과 */
+    .panel { width: min(560px, 100%); background: var(--surface); border: 2px solid var(--ink); border-radius: 20px; padding: clamp(20px, 4vw, 32px); box-shadow: 0 8px 0 rgba(47, 38, 32, 0.12); max-height: calc(100vh - 32px); overflow: auto; }
+    .panel ol { margin: 0 0 18px; padding-left: 1.2em; font-family: var(--hand); font-size: 22px; font-weight: 700; }
+    .actions { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+    .actions .btn { flex: 1 1 160px; }
+    .sub { margin: -8px 0 16px; text-align: center; color: var(--ink-soft); }
+    .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 0 0 16px; }
+    .stats div { background: var(--paper); border-radius: 12px; padding: 10px 6px; text-align: center; }
+    .stats dt { font-size: 12px; color: var(--ink-soft); }
+    .stats dd { margin: 2px 0 0; font-weight: 700; font-size: 18px; font-variant-numeric: tabular-nums; }
+    .bars { list-style: none; margin: 0 0 18px; padding: 0; display: grid; gap: 8px; }
+    .bars li { display: grid; grid-template-columns: 1fr auto; gap: 2px 8px; font-size: 14px; }
+    .bars li span { font-family: var(--hand); font-weight: 700; font-size: 18px; }
+    .bars li i { grid-column: 1; height: 8px; border-radius: 4px; background: var(--blue); min-width: 4px; }
+    .bars li b { grid-row: 1 / span 2; grid-column: 2; align-self: center; font-variant-numeric: tabular-nums; }
+    #benchReport { margin: 0 0 16px; padding: 12px; background: var(--paper); border-radius: 12px; font-size: 12px; max-height: 40vh; overflow: auto; white-space: pre-wrap; }
+
+    /* 조이스틱 */
+    #joy { position: fixed; left: 0; top: 0; width: 0; height: 0; z-index: 4; pointer-events: none; }
+    #joy::before { content: ''; position: absolute; left: -50px; top: -50px; width: 100px; height: 100px; border-radius: 50%; border: 2px dashed rgba(47, 38, 32, 0.35); }
+    #joy i { position: absolute; left: -22px; top: -22px; width: 44px; height: 44px; border-radius: 50%; background: rgba(47, 91, 255, 0.55); }
+
+    #debug { position: fixed; right: 8px; bottom: 8px; margin: 0; padding: 8px 10px; background: rgba(47, 38, 32, 0.78); color: #fff; font: 12px/1.45 ui-monospace, Menlo, monospace; border-radius: 8px; z-index: 9; pointer-events: none; white-space: pre; }
+
+    @media (max-width: 760px), (max-aspect-ratio: 1/1) {
+      .cover { place-items: center; padding-left: 16px; background-position: 75% center; }
+    }
+    @media (max-height: 520px) {
+      .cover .book { padding: 18px 22px; }
+      .title { font-size: 38px; margin-bottom: 12px; }
+      .hint { margin-top: 8px; }
+    }
+    @media (max-width: 640px) {
+      .stats { grid-template-columns: repeat(2, 1fr); }
+      .hud-top { top: 10px; padding: 0 10px; }
+      .heart { width: 16px; height: 15px; clip-path: path('M8 15 L1.3 8 A3.9 3.9 0 0 1 8 2.5 A3.9 3.9 0 0 1 14.7 8 Z'); }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="game" aria-label="게임 화면"></canvas>
+
+  <section id="cover" class="screen cover" aria-labelledby="coverTitle">
+    <div class="book">
+      <p class="kicker">문장이 무기가 되는 그림책 뱀서류</p>
+      <h1 class="title" id="coverTitle"><span id="coverName">서영</span><span id="coverJosa">이와</span><br />책 먹는 부기</h1>
+      <label class="name-field">주인공 이름 <input id="nameInput" maxlength="5" value="서영" autocomplete="off" spellcheck="false" /></label>
+      <button id="startBtn" class="btn primary" type="button">밤 시작하기 <kbd>Enter</kbd></button>
+      <p class="hint">WASD·방향키로 움직여요. 문장 무기는 저절로 나가요.<br />휴대폰에서는 화면을 누른 채 끌어요.</p>
+      <p class="meta-line" id="coverMeta"></p>
+    </div>
+    <a class="back" href="../">← 포트폴리오로</a>
+  </section>
+
+  <div id="hud" hidden>
+    <div class="xp"><i></i></div>
+    <div class="hud-top">
+      <div class="hearts" role="img" aria-label="체력"></div>
+      <ol class="lines" aria-live="polite"></ol>
+      <div class="right"><span class="timer">0:00</span><span class="lv">Lv 1</span></div>
+    </div>
+    <div class="adverbs"></div>
+  </div>
+
+  <section id="levelup" class="screen overlay" hidden aria-labelledby="levelupTitle">
+    <div class="lv-wrap">
+      <h2 id="levelupTitle">낱말을 골라요</h2>
+      <div class="cards"></div>
+      <p class="hint">1·2·3 키 또는 눌러서 고르기</p>
+    </div>
+  </section>
+
+  <section id="pause" class="screen overlay" hidden aria-labelledby="pauseTitle">
+    <div class="panel">
+      <h2 id="pauseTitle">잠깐 쉬어요</h2>
+      <ol id="pauseLines"></ol>
+      <div class="actions">
+        <button id="resumeBtn" class="btn primary" type="button">계속하기 <kbd>Esc</kbd></button>
+        <button id="quitBtn" class="btn" type="button">표지로</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="result" class="screen overlay" hidden aria-labelledby="resultTitle">
+    <div class="panel">
+      <h2 id="resultTitle"></h2>
+      <p class="sub" id="resultSub"></p>
+      <dl class="stats" id="resultStats"></dl>
+      <ul class="bars" id="resultBars"></ul>
+      <pre id="benchReport" hidden></pre>
+      <div class="actions">
+        <button id="againBtn" class="btn primary" type="button">다시 하기 <kbd>Enter</kbd></button>
+        <button id="coverBtn" class="btn" type="button">표지로</button>
+      </div>
+    </div>
+  </section>
+
+  <div id="joy" hidden><i></i></div>
+  <pre id="debug" hidden></pre>
+
+  <script type="module" src="./game.js"></script>
+</body>
+</html>
