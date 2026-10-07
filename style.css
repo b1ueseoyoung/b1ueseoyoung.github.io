@@ -742,6 +742,62 @@ a.fig-frame:hover { border-color: var(--accent); }
   .side-body { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); align-items: start; }
 }
 
+/* 꿈도깨비 리뉴얼 품질 검증: 화면과 설명 아래 전체 폭으로 */
+.side-eval { grid-column: 1 / -1; padding-top: var(--space-5); border-top: var(--hair) solid var(--line); }
+.side-text.side-eval > h4:first-child { margin-top: 0; }
+.side-eval .scores { margin-top: var(--space-4); }
+.side-eval .scores + .block-note { max-width: var(--measure-l); margin-bottom: 0; }
+.eval-row { display: grid; gap: var(--space-6) var(--col-gap); margin-top: var(--space-6); }
+.eval-row .fig { margin-top: 0; }
+.eval-row h4:first-child { margin-top: 0; }
+@media (min-width: 64rem) {
+  .eval-row { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); align-items: start; }
+}
+
+/* 막대 그래프: 막대 끝에 값, 옅은 띠는 같은 인물 판정 기준(0.30~0.45). 눈금은 0~0.8 */
+.eval-chart .fig-frame { padding: var(--space-4); background: var(--surface); }
+.bars-title { font-size: var(--text-sm); font-weight: 600; }
+.bars, .bars-axis {
+  --name-w: 9.5rem; --value-w: 2.75rem;
+  display: grid; grid-template-columns: var(--name-w) minmax(0, 1fr) var(--value-w); column-gap: var(--space-3);
+}
+.bars { gap: var(--space-2) var(--space-3); margin-top: var(--space-3); }
+.bars li { display: contents; }
+.bar-name { font-size: var(--text-xs); line-height: var(--lh-snug); color: var(--text); align-self: center; }
+.bar-track {
+  position: relative; align-self: stretch; min-height: 1.5rem;
+  background: linear-gradient(to right, transparent 37.5%, var(--accent-soft) 37.5% 56.25%, transparent 56.25%);
+}
+.bar {
+  position: absolute; left: 0; top: 50%; translate: 0 -50%;
+  width: calc(var(--v) / .8 * 100%); height: .875rem; border-radius: 0 4px 4px 0; background: var(--accent);
+}
+.is-muted .bar { background: var(--line-control); }
+.bar-value { font-size: var(--text-xs); font-variant-numeric: tabular-nums; color: var(--muted); align-self: center; }
+.is-final .bar-name, .is-final .bar-value { font-weight: 600; color: var(--text); }
+.bars-axis { margin-top: var(--space-2); font-size: var(--text-xs); color: var(--muted); font-variant-numeric: tabular-nums; }
+.axis-ticks { grid-column: 2; position: relative; height: 1.5em; border-top: var(--hair) solid var(--line); }
+.axis-ticks span { position: absolute; top: var(--space-1); left: calc(var(--t) / .8 * 100%); translate: -50% 0; }
+.axis-ticks span:first-child { translate: 0 0; }
+@media (max-width: 29.9375rem) {
+  .bars, .bars-axis { --name-w: 7rem; --value-w: 2.25rem; }
+}
+
+/* 현재 방식과 개선 방식 삽화 비교: 좁은 화면은 장면마다 한 줄, 넓은 화면은 장면 5개를 나란히 */
+.eval-faces { margin-top: var(--space-6); }
+.side-eval .faces { display: grid; gap: var(--space-5); padding-left: 0; list-style: none; font-size: var(--text-base); }
+.face-scene { font-size: var(--text-sm); font-weight: 600; }
+.face-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-2); margin-top: var(--space-2); }
+.face img { width: 100%; height: auto; border: var(--hair) solid var(--line); border-radius: var(--radius-control); }
+.face.is-improved img { border-color: var(--accent); }
+.face-score { display: flex; justify-content: space-between; margin-top: var(--space-1); font-size: var(--text-xs); font-variant-numeric: tabular-nums; }
+.face-score span { color: var(--muted); }
+.face.is-improved .face-score { font-weight: 600; }
+@media (min-width: 48rem) {
+  .side-eval .faces { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--space-3); }
+  .face-pair { grid-template-columns: minmax(0, 1fr); }
+}
+
 .contact-lead, .side-lead { margin-top: var(--space-3); color: var(--muted); }
 .contact-mail {
   display: inline-block; margin-top: var(--space-2); padding-block: var(--space-2);

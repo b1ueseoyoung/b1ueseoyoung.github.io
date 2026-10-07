@@ -597,6 +597,89 @@
                   <a class="btn primary" href="https://github.com/b1ueseoyoung/boogie-renewal" target="_blank" rel="noopener"><svg class="icon" aria-hidden="true"><use href="#i-github" /></svg><span class="visually-hidden">꿈도깨비 리뉴얼 </span>저장소<span class="visually-hidden"> (새 탭)</span></a>
                 </div>
               </div>
+              <div class="side-text side-eval">
+                <h4>품질 검증 — 삽화 속 얼굴이 사진과 닮았는가</h4>
+                <p>사진 1장으로 만든 삽화에서 얼굴이 유지되는지 직접 측정했습니다. 기존 방식&#8288;(ComfyUI와 IP-Adapter)&#8288; 2종과 GPT Image 참조 방식 3종을 같은 장면 5개로 비교하고&#8288;(그림 65장)&#8288;, 생성 방식을 프롬프트 개선, 얼굴 보정, 측정 후 재생성의 3단계로 고쳤습니다. 닮은 정도는 얼굴 인식 모델&#8288;(ArcFace)&#8288;로 잰 원본 사진과의 얼굴 유사도입니다.</p>
+                <dl class="pairs scores">
+                  <div><dt>사진 유사도 평균</dt><dd>0.34 → 0.51</dd></div>
+                  <div><dt>0.45 이상인 칸</dt><dd>6/15 → 10/15</dd></div>
+                  <div><dt>승인 캐릭터 유사도</dt><dd>0.67 → 0.73</dd></div>
+                  <div><dt>그림 1장당 호출</dt><dd>1회 → 3.33회</dd></div>
+                </dl>
+                <p class="block-note">현재 서비스 방식에서 개선 방식으로 바꿨을 때의 변화입니다. 유사도는 1이면 같은 얼굴, 다른 사람끼리는 0.0 안팎이고, 실사 사진의 같은 인물 판정 기준은 0.30~0.45입니다. 승인 캐릭터 유사도는 한 권 안에서 같은 인물로 유지되는지를 봅니다.</p>
+                <div class="eval-row">
+                  <figure class="fig eval-chart">
+                    <div class="fig-frame">
+                      <p class="bars-title" id="boogieBarsTitle">원본 사진과의 얼굴 유사도 평균</p>
+                      <ol class="bars" aria-labelledby="boogieBarsTitle">
+                        <li class="is-muted" style="--v: .03"><span class="bar-name">다른 사람&#8288;(대조군)</span><span class="bar-track"><span class="bar"></span></span><span class="bar-value">0.03</span></li>
+                        <li class="is-muted" style="--v: .24"><span class="bar-name">기존 방식</span><span class="bar-track"><span class="bar"></span></span><span class="bar-value">0.24</span></li>
+                        <li class="is-muted" style="--v: .34"><span class="bar-name">현재 서비스 방식</span><span class="bar-track"><span class="bar"></span></span><span class="bar-value">0.34</span></li>
+                        <li style="--v: .43"><span class="bar-name">+ 프롬프트·참조 개선</span><span class="bar-track"><span class="bar"></span></span><span class="bar-value">0.43</span></li>
+                        <li style="--v: .49"><span class="bar-name">+ 얼굴 보정</span><span class="bar-track"><span class="bar"></span></span><span class="bar-value">0.49</span></li>
+                        <li class="is-final" style="--v: .51"><span class="bar-name">+ 재생성&#8288;(개선 방식)</span><span class="bar-track"><span class="bar"></span></span><span class="bar-value">0.51</span></li>
+                      </ol>
+                      <div class="bars-axis" aria-hidden="true"><div class="axis-ticks"><span style="--t: 0">0</span><span style="--t: .2">0.2</span><span style="--t: .4">0.4</span><span style="--t: .6">0.6</span><span style="--t: .8">0.8</span></div></div>
+                    </div>
+                    <figcaption>옅은 파란 띠는 같은 인물 판정 기준&#8288;(0.30~0.45)&#8288;입니다. 위의 셋은 비교 실험 결과이고, 아래 셋은 현재 서비스 방식에 개선 단계를 하나씩 더한 결과입니다. 기존 방식은 원래 코드의 결함을 고친 버전이고, 대조군은 InsightFace 표본 사진 속 다른 사람 6명입니다.</figcaption>
+                  </figure>
+                  <div>
+                    <h4>결과와 한계</h4>
+                    <ul>
+                      <li>효과가 있던 것: 사진과 승인 캐릭터를 함께 참조하고 닮음 우선, 얼굴 묘사, 미화 금지를 넣은 프롬프트, 그리고 구도와 표정은 두고 얼굴만 사진에 맞게 다시 그리는 보정입니다. 보정은 얼굴이 작은 전신과 옷이 바뀐 장면에서 가장 크게 올랐습니다.</li>
+                      <li>채택하지 않은 것: 사진만 참조하면 수치는 더 높았지만 미소가 무표정으로 바뀌고 지시에 없는 옷이 나왔습니다. 반실사 화풍과 구도 규칙은 효과가 없었습니다.</li>
+                      <li>재현: 웃음과 옆얼굴 단서 문장만 더한 같은 3단계 방식을 독립적으로 한 번 더 돌려도 0.51이 나왔습니다. 단서 문장 자체의 효과는 없었습니다. 생성 실패&#8288;(거절, 시간 초과)&#8288;는 306번 호출 중 0건입니다.</li>
+                      <li>남은 문제: 옆모습&#8288;(0.29)&#8288;과 눈을 감고 크게 웃는 표정&#8288;(0.449)&#8288;은 0.45에 못 미쳤습니다. 정면 사진과 비교하는 측정 방식의 한계도 섞여 있습니다.</li>
+                      <li>한계: 성인 1명, 사진 1장의 결과입니다. 후보 선택과 평가에 같은 지표를 써서 수치가 낙관적이고, 사람 평가는 하지 않았습니다. 보호자 동의를 받은 아이 사진 여러 장으로 다시 검증할 계획입니다.</li>
+                    </ul>
+                  </div>
+                </div>
+                <figure class="fig eval-faces">
+                  <ul class="faces">
+                    <li>
+                      <p class="face-scene">정면</p>
+                      <div class="face-pair">
+                        <div class="face"><img src="assets/boogie-eval-current-front.webp" width="373" height="480" loading="lazy" decoding="async" alt="현재 방식으로 그린 정면 장면. 숲속 빈터에서 흰 티셔츠와 청바지 차림의 긴 머리 인물이 정면을 보고 미소 짓는다." /><p class="face-score"><span>현재</span>0.47</p></div>
+                        <div class="face is-improved"><img src="assets/boogie-eval-improved-front.webp" width="373" height="480" loading="lazy" decoding="async" alt="개선 방식으로 그린 정면 장면. 같은 숲속 빈터에서 같은 차림의 인물이 정면을 보고 미소 짓는다." /><p class="face-score"><span>개선</span>0.59</p></div>
+                      </div>
+                    </li>
+                    <li>
+                      <p class="face-scene">옆모습</p>
+                      <div class="face-pair">
+                        <div class="face"><img src="assets/boogie-eval-current-side.webp" width="373" height="480" loading="lazy" decoding="async" alt="현재 방식으로 그린 옆모습 장면. 강가 흙길을 걷는 인물의 전신 옆모습이며 얼굴이 작게 보인다." /><p class="face-score"><span>현재</span>0.06</p></div>
+                        <div class="face is-improved"><img src="assets/boogie-eval-improved-side.webp" width="373" height="480" loading="lazy" decoding="async" alt="개선 방식으로 그린 옆모습 장면. 노을 진 강변 길을 걷는 인물의 전신 옆모습이다." /><p class="face-score"><span>개선</span>0.31</p></div>
+                      </div>
+                    </li>
+                    <li>
+                      <p class="face-scene">크게 웃는 표정</p>
+                      <div class="face-pair">
+                        <div class="face"><img src="assets/boogie-eval-current-expression.webp" width="373" height="480" loading="lazy" decoding="async" alt="현재 방식으로 그린 웃는 장면. 축제 거리에서 빨간 풍선을 든 인물이 눈을 감고 입을 크게 벌려 웃는다." /><p class="face-score"><span>현재</span>0.31</p></div>
+                        <div class="face is-improved"><img src="assets/boogie-eval-improved-expression.webp" width="373" height="480" loading="lazy" decoding="async" alt="개선 방식으로 그린 웃는 장면. 같은 축제 거리에서 빨간 풍선을 든 인물이 눈을 감고 크게 웃는다." /><p class="face-score"><span>개선</span>0.47</p></div>
+                      </div>
+                    </li>
+                    <li>
+                      <p class="face-scene">전신</p>
+                      <div class="face-pair">
+                        <div class="face"><img src="assets/boogie-eval-current-full-body.webp" width="373" height="480" loading="lazy" decoding="async" alt="현재 방식으로 그린 전신 장면. 비 오는 거리에서 인물이 웅덩이를 뛰어넘으며 물이 튄다." /><p class="face-score"><span>현재</span>0.46</p></div>
+                        <div class="face is-improved"><img src="assets/boogie-eval-improved-full-body.webp" width="373" height="480" loading="lazy" decoding="async" alt="개선 방식으로 그린 전신 장면. 비 오는 거리에서 인물이 웅덩이 위로 뛰어오른다." /><p class="face-score"><span>개선</span>0.58</p></div>
+                      </div>
+                    </li>
+                    <li>
+                      <p class="face-scene">옷 바뀜</p>
+                      <div class="face-pair">
+                        <div class="face"><img src="assets/boogie-eval-current-outfit.webp" width="373" height="480" loading="lazy" decoding="async" alt="현재 방식으로 그린 옷 바뀜 장면. 비 오는 길에서 인물이 큰 우산을 들고 노란 비옷과 초록 장화를 입고 있다." /><p class="face-score"><span>현재</span>0.48</p></div>
+                        <div class="face is-improved"><img src="assets/boogie-eval-improved-outfit.webp" width="373" height="480" loading="lazy" decoding="async" alt="개선 방식으로 그린 옷 바뀜 장면. 같은 차림으로 큰 꽃무늬 우산을 들고 비 오는 길에 서 있다." /><p class="face-score"><span>개선</span>0.54</p></div>
+                      </div>
+                    </li>
+                  </ul>
+                  <figcaption>같은 장면 문장으로 만든 현재 서비스 방식&#8288;(1회차)&#8288;과 개선 방식&#8288;(첫 칸)&#8288;의 삽화입니다. 숫자는 원본 사진과의 얼굴 유사도입니다.</figcaption>
+                </figure>
+                <div class="side-actions">
+                  <a class="btn primary" href="assets/boogie-face-eval-report.pdf" target="_blank" rel="noopener"><span class="visually-hidden">꿈도깨비 삽화 얼굴 유지 검증 </span>보고서 보기<svg class="icon" aria-hidden="true"><use href="#i-arrow-up-right" /></svg><span class="visually-hidden"> (PDF, 새 탭)</span></a>
+                  <a class="btn" href="assets/boogie-face-eval-report.pdf" download="꿈도깨비-삽화-얼굴-유지-검증-보고서.pdf"><span class="visually-hidden">꿈도깨비 삽화 얼굴 유지 검증 보고서 </span>PDF 저장</a>
+                </div>
+                <p class="block-note">실험 설계, 방식별 결과, 개선 과정, 한계, 프롬프트 원문까지 담은 보고서 전문입니다. PDF 11쪽, 약 6.6MB.</p>
+              </div>
             </div>
           </details>
 
