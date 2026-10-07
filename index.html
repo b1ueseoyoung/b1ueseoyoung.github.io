@@ -528,6 +528,58 @@
                 </div>
                 <p class="block-note">데모에서는 진단 실행과 삭제가 막혀 있습니다.</p>
               </div>
+              <div class="side-text side-eval">
+                <h4>품질 평가 — 심은 결함은 찾고, 멀쩡한 대목은 두는가</h4>
+                <p>문제가 없는 메모와, 거기에 결함 하나&#8288;(설정 충돌, 동기 문장 삭제, 폐기안 표시 삭제, 결말 삭제)&#8288;를 심은 메모를 4쌍 만들어 앱과 같은 진단 경로로 돌렸습니다. 심은 결함을 찾는지, 멀쩡한 대목을 문제 삼지 않는지를 하나의 정확도로 합치지 않고 범주별로 셌고, 같은 메모를 3번씩 다시 넣어 판정이 유지되는지도 쟀습니다.</p>
+                <dl class="pairs scores">
+                  <div><dt>심은 결함과 지운 내용</dt><dd>5/5</dd></div>
+                  <div><dt>하면 안 되는 지적</dt><dd>2/10</dd></div>
+                  <div><dt>3번 모두 같은 답</dt><dd>162/184</dd></div>
+                  <div><dt>1회 소요와 비용</dt><dd>305초 · $0.020</dd></div>
+                </dl>
+                <p class="block-note">배포 중인 설정&#8288;(gpt-6-luna, 추론 max)&#8288;의 값입니다. 심은 결함 3건과 지운 내용 2건은 3번 반복해도 매번 문제로 판정했습니다. 같은 메모를 3번 넣으면 23개 질문 중 2~5개의 답이 실행마다 달라졌습니다&#8288;(8개 메모의 184칸 중 22칸)&#8288;.</p>
+                <div class="eval-row">
+                  <figure class="fig eval-table-fig">
+                    <div class="table-scroll" tabindex="0" role="region" aria-labelledby="memoTableCap">
+                      <table class="eval-table">
+                        <thead>
+                          <tr><th scope="col">본 것</th><th scope="col" class="is-deployed">gpt-6-luna<small>추론 max, 배포 중</small></th><th scope="col">gpt-6-luna<small>추론 high</small></th><th scope="col">Claude Opus 5.5<small>추론 max</small></th></tr>
+                        </thead>
+                        <tbody>
+                          <tr><th scope="row">소요 시간 중앙값</th><td class="is-deployed">305초</td><td>95초</td><td>737초</td></tr>
+                          <tr><th scope="row">1회 비용&#8288;(표준 요금)&#8288;</th><td class="is-deployed">$0.020</td><td>$0.006</td><td>기록 없음&#8288;(구독)&#8288;</td></tr>
+                          <tr><th scope="row">심은 결함을 문제로 판정</th><td class="is-deployed">3/3</td><td>2/3</td><td>3/3</td></tr>
+                          <tr><th scope="row">지운 내용을 문제로 판정</th><td class="is-deployed">2/2</td><td>2/2</td><td>1/2</td></tr>
+                          <tr><th scope="row">문제 없는 대목을 통과</th><td class="is-deployed">4/5</td><td>4/5</td><td>5/5</td></tr>
+                          <tr><th scope="row">정해 둔 근거 문장까지 인용</th><td class="is-deployed">2/6</td><td>2/6</td><td>4/6</td></tr>
+                          <tr><th scope="row">하면 안 되는 지적</th><td class="is-deployed">2/10</td><td>0/10</td><td>0/10</td></tr>
+                          <tr><th scope="row">원문에 없는 인용</th><td class="is-deployed">1/728</td><td>3/606</td><td>0/786</td></tr>
+                          <tr><th scope="row">바꾸지 않은 질문의 답이 쌍 사이에서 달라짐</th><td class="is-deployed">3/78</td><td>8/78</td><td>6/78</td></tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <figcaption id="memoTableCap">모델과 추론 설정별 결과&#8288;(2026-09-30~10-01, 메모 8개를 1회씩)&#8288;입니다. 배포 설정을 3번 더 돌리니 같은 조건에서도 근거 인용은 6건 중 3~4건, 하면 안 되는 지적은 10건 중 1~3건으로 달라져, 표의 작은 차이를 모델 차이로 읽으면 안 됩니다. 원문에 없는 인용은 앱이 걸러 화면에 나오지 않았습니다.</figcaption>
+                  </figure>
+                  <div>
+                    <h4>결정과 드러난 약점</h4>
+                    <ul>
+                      <li>배포 결정: 미리 정한 관문 5개 중 2개&#8288;(근거 인용 3건 이상, 하면 안 되는 지적 1건 이하)&#8288;를 넘지 못했습니다. 추론 high보다 시간과 비용이 약 3배지만, high가 놓친 결함을 찾고 쌍 사이에서 답이 흔들리는 일이 줄어 추론 max로 배포했습니다.</li>
+                      <li>가장 먼저 고칠 3가지가 중요도가 아니라 항목 목록 순서로 정해집니다. 그래서 목록 뒤쪽의 결말 문제는 빨강이어도 밀려났습니다.</li>
+                      <li>메모에 없는 것과 메모 안에서 서로 어긋나는 것이 똑같이 빨강&#8288;(고쳐보세요)&#8288;으로 표시됩니다.</li>
+                      <li>인용이 원문에 있는지만 확인하고, 그 인용이 판단을 실제로 뒷받침하는지는 확인하지 않습니다.</li>
+                      <li>행동 동기는 반복 측정 24건 모두 빨강이라, 동기 문장이 적힌 메모와 지운 메모를 가르지 못합니다.</li>
+                      <li>한계: AI가 쓴 928~1,341자의 짧은 합성 메모이고, 정답 라벨도 사람 검토 전의 AI 임시 라벨입니다. 작가 동의를 받은 실제 메모 3~5개로 다시 재는 절차를 정해 두었습니다.</li>
+                    </ul>
+                    <h4>웹 성능</h4>
+                    <p class="block-note">로그인 없이 열리는 두 화면을 Lighthouse로 3회씩 쟀습니다. TBT 7ms 이하, CLS 0.085 이하로 12회 모두 낮았고, 데스크톱 LCP 중앙값은 로그인 0.5초, 예시 리포트 2.0초입니다. 느린 4G를 가정한 모바일은 LCP가 1.5~13초로 갈렸습니다. 전송량 2.2MB 중 2.0MB인 폰트 파일 때문으로 보이며, 아직 고치지 않았습니다.</p>
+                  </div>
+                </div>
+                <div class="side-actions">
+                  <a class="btn primary" href="assets/memo-eval-report.pdf" target="_blank" rel="noopener"><span class="visually-hidden">기획 메모 진단 품질 평가 </span>평가 기록 보기<svg class="icon" aria-hidden="true"><use href="#i-arrow-up-right" /></svg><span class="visually-hidden"> (PDF, 새 탭)</span></a>
+                  <a class="btn" href="assets/memo-eval-report.pdf" download="기획-메모-진단-품질-평가-기록.pdf"><span class="visually-hidden">기획 메모 진단 품질 평가 기록 </span>PDF 저장</a>
+                </div>
+                <p class="block-note">평가 기준, 모델별 결과, 3회 반복 측정, 웹 성능, 실행 방법까지 담은 평가 기록 전문입니다. PDF 37쪽, 약 1.7MB.</p>
+              </div>
             </div>
           </details>
 
