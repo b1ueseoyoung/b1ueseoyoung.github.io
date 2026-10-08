@@ -838,6 +838,42 @@
               </div>
             </div>
           </details>
+
+          <details class="side" name="side">
+            <summary>
+              <h3>숫자야구 MCP — Claude가 혼자 끝까지 두는 숫자야구</h3>
+              <span class="side-line">숫자야구를 MCP 서버로 만들어, Claude Code가 도구를 불러 스트라이크·볼을 보며 정답을 좁혀 가게 한 실습</span>
+            </summary>
+            <div class="side-body">
+              <figure class="fig">
+                <div class="fig-frame">
+                  <video src="assets/side-numbaseball-demo.mp4" poster="assets/side-numbaseball-poster.webp" width="1400" height="900"
+                         controls muted playsinline preload="none"
+                         aria-label="Claude Code가 숫자야구 MCP 서버로 한 판을 두는 2분 데모 영상. 자릿수와 난이도 입력 창이 뜨고, 7번째 추측에서 정답 529를 맞힌 뒤 추측별 결과 표를 보여 준다."></video>
+                </div>
+                <figcaption>Claude Code 2.1.294로 실제 한 판을 녹화한 영상(2분 3초, 소리 없음)입니다. 첫 화면은 끝에 나오는 추측별 결과 표입니다.</figcaption>
+              </figure>
+              <div class="side-text">
+                <dl class="meta">
+                  <div><dt>실행</dt><dd>Claude Code에 붙이는 로컬 MCP 서버 (stdio)</dd></div>
+                  <div><dt>기술</dt><dd>TypeScript, MCP TypeScript SDK v2, Bun</dd></div>
+                </dl>
+                <h4>하는 일</h4>
+                <p>공개된 1~100 숫자 맞히기 MCP 서버를 SDK v2로 다시 만든 뒤, 한국식 숫자야구로 바꿨습니다. <code>/numbaseball:new_game</code>으로 시작하면 서버가 자릿수와 난이도를 묻는 입력 창을 띄우고, Claude가 <code>guess</code>를 되풀이하며 스트라이크·볼 결과로 후보를 좁혀 끝까지 둡니다. 데모에서는 12번 기회 중 7번째에 정답을 맞혔습니다.</p>
+                <h4>설계 원칙</h4>
+                <ul>
+                  <li>대기 중에는 <code>start_game</code>만, 게임 중에는 <code>guess</code>와 <code>give_up</code>만 보이도록 상태에 따라 도구를 켜고 끄고, 바뀔 때마다 목록 변경을 알립니다.</li>
+                  <li>설정이 빠지면 서버가 사용자에게 직접 묻고(elicitation), 거절하면 임의로 정하지 않고 시작하지 않았다고 알립니다.</li>
+                  <li>진행 중에는 정답을 어디에도 내보내지 않고, 게임 로직은 MCP와 분리해 단위 테스트로 고정했습니다.</li>
+                  <li>신·구 두 프로토콜 버전&#8288;(2026-07-28, 2025-11-25)&#8288;으로 모든 통합 테스트를 돌려 199개가 통과합니다.</li>
+                </ul>
+                <div class="side-actions">
+                  <a class="btn primary" href="https://github.com/b1ueseoyoung/numbaseball-mcp" target="_blank" rel="noopener"><svg class="icon" aria-hidden="true"><use href="#i-github" /></svg><span class="visually-hidden">숫자야구 MCP </span>저장소<span class="visually-hidden"> (새 탭)</span></a>
+                </div>
+                <p class="block-note">MIT 라이선스. Claude Code 2.1.294에서 확인했습니다.</p>
+              </div>
+            </div>
+          </details>
         </div>
       </div>
     </section>

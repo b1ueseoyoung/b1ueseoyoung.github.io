@@ -484,7 +484,7 @@ kbd {
   display: block; overflow: hidden; padding: var(--space-5) var(--space-4) 0;
   border: var(--hair) solid var(--line); border-radius: var(--radius-panel); background: #ffffff;
 }
-.fig-frame img { width: 100%; height: auto; }
+.fig-frame img, .fig-frame video { display: block; width: 100%; height: auto; }
 .fig figcaption { margin-top: var(--space-2); max-width: var(--measure-l); font-size: var(--text-xs); line-height: var(--lh-snug); color: var(--muted); }
 /* 그래프는 원본 바탕이 밝아서 흰 바탕 위에 둬요 */
 .plot .fig-frame { padding: var(--space-3); }
