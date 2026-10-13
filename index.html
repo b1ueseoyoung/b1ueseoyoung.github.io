@@ -16,6 +16,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400..800&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet" />
   <script>try { const t = localStorage.getItem('theme'); if (t) document.documentElement.dataset.theme = t; } catch {}</script>
+  <!-- html.js: JS가 켜져 있어요(히어로 터미널 창을 보여요).
+       html.hero-wait: 히어로 모션은 t=0(빈 히어로)에서 시작하니(?capture도 같아요) 첫 화면부터 그 상태로 숨겨 둬요. script.js가 2.5초 안에 못 오면 그냥 보여 줘요 -->
+  <script>try { const d = document.documentElement; d.classList.add('js'); if (!matchMedia('(prefers-reduced-motion: reduce)').matches) { d.classList.add('hero-wait'); setTimeout(() => d.classList.remove('hero-wait'), 2500); } } catch {}</script>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -57,33 +60,39 @@
   </header>
 
   <main id="top" tabindex="-1">
-    <!-- 히어로: 무엇을 만들었는지 한 문장, 버튼 하나, 선 위의 쫄라맨 -->
+    <!-- 히어로: 무엇을 만들었는지 한 문장, 굴러가는 문장 한 줄, 버튼 하나, 터미널 창 -->
     <section class="hero container" aria-labelledby="heroTitle">
       <p class="hero-id"><strong>seoyoung</strong><span>AI Engineer &amp; System Architect</span></p>
       <h1 id="heroTitle">
         <span class="phrase">지식으로 구조를 그리고,</span>
         <span class="phrase">그&nbsp;위에서 AI를 움직입니다.</span>
       </h1>
+      <!-- 문장 슬롯(장식). 같은 내용은 소개 문단과 프로젝트 섹션에 있어요 -->
+      <div class="tk-reel" aria-hidden="true">
+        <span class="tk-line">동화를 만들고</span>
+        <span class="tk-line">VoC 이상을 잡고</span>
+        <span class="tk-line">혈당을 예측하고</span>
+        <span class="tk-line">설정 충돌을 찾습니다.</span>
+      </div>
       <p class="hero-sub"><span class="phrase">동화 생성 서비스, 설정 충돌 감지 에이전트,</span> <span class="phrase">VoC&nbsp;이상 탐지 플랫폼을 만들었습니다.</span> <span class="phrase">논문 4편, <span class="nowrap">KSC 2025 학부생 장려상,</span> <span class="nowrap">HCI Korea 2026</span> 구두 발표.</span></p>
       <a class="btn primary hero-cta" href="#contact">연락하기</a>
 
-      <!-- 쫄라맨이 평소에 머무는 자리. 바닥은 아래 프로젝트 섹션의 윗선이에요 -->
-      <div class="stage" id="buddyStage" aria-hidden="true"></div>
-      <button class="buddy" id="buddy" type="button"
-              aria-label="쫄라맨 캐릭터. 누르면 점프하고, 끌면 옮길 수 있어요. 키보드에서는 Enter로 점프, 좌우 방향키로 이동해요.">
-        <span class="buddy-inner">
-          <span class="buddy-bubble" id="buddyBubble" aria-hidden="true"></span>
-          <img class="buddy-face" src="face.webp" alt="" width="134" height="180" draggable="false"
-               onerror="this.onerror=null;this.src='https://avatars.githubusercontent.com/u/174824837?v=4';this.classList.add('fallback')" />
-          <svg class="buddy-body" viewBox="0 0 50 72" aria-hidden="true">
-            <line x1="25" y1="0" x2="25" y2="36" />
-            <line class="limb arm-l" x1="25" y1="6" x2="25" y2="30" />
-            <line class="limb arm-r" x1="25" y1="6" x2="25" y2="30" />
-            <line class="limb leg-l" x1="25" y1="36" x2="25" y2="70" />
-            <line class="limb leg-r" x1="25" y1="36" x2="25" y2="70" />
-          </svg>
-        </span>
-      </button>
+      <!-- 제목을 쓰는 캐럿과 터미널 창(장식). 줄 내용은 script.js의 히어로 모션이 채워요 -->
+      <span class="tm-caret" aria-hidden="true"></span>
+      <div class="tm">
+        <div class="tm-card" aria-hidden="true">
+          <div class="tm-head">
+            <span class="dots"><i></i><i></i><i></i></span>
+            <span class="tm-title">guest@b1ueseoyoung: ~</span>
+          </div>
+          <div class="tm-body"><div class="tm-scroll"></div></div>
+        </div>
+        <button class="tm-ctl" type="button" data-state="playing" aria-label="소개 애니메이션 일시정지" title="일시정지">
+          <svg class="i-pause" viewBox="0 0 16 16" aria-hidden="true"><rect x="4" y="3" width="2.6" height="10" rx=".6" /><rect x="9.4" y="3" width="2.6" height="10" rx=".6" /></svg>
+          <svg class="i-play" viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3.4v9.2a.7.7 0 0 0 1.07.6l7.2-4.6a.7.7 0 0 0 0-1.2l-7.2-4.6A.7.7 0 0 0 5 3.4Z" /></svg>
+          <svg class="i-replay" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.6 8.6a4.6 4.6 0 1 0 1.5-4.1" /><path d="M4.6 1.9v2.9h2.9" /></svg>
+        </button>
+      </div>
     </section>
 
     <!-- 프로젝트: 왼쪽은 목록과 분류, 오른쪽은 사례 -->
@@ -913,6 +922,7 @@
   </div>
 
   <div class="toast" id="toast" role="status"></div>
-  <script src="script.js"></script>
+  <!-- script.js를 못 받으면 JS가 꺼진 것처럼 보여요: 히어로 글자는 바로 보이고, 빈 터미널 창은 빠져요 -->
+  <script src="script.js" onerror="document.documentElement.classList.remove('js', 'hero-wait')"></script>
 </body>
 </html>

@@ -1,6 +1,6 @@
 /* ==========================================================================
    b1ueseoyoung 포트폴리오, 2안
-   1 토큰  2 기본  3 공용 부품  4 헤더  5 히어로와 쫄라맨  6 프로젝트
+   1 토큰  2 기본  3 공용 부품  4 헤더  5 히어로  6 프로젝트
    7 창(Lore Keeper, 터미널)  8 집중 분야, 연구, 스택, 사이드 프로젝트, 연락  9 오버레이  10 모션
    규칙과 근거는 DESIGN.md에 있다.
    ========================================================================== */
@@ -82,7 +82,6 @@
   --measure-title: 20em;
   --label-col: 8.5em;
   --step-name: 5.5rem;
-  --stage-h: 9.5rem;
   --window-w: 22rem;
   --window-max: 24rem;
   --term-w: 40rem;
@@ -91,7 +90,6 @@
 
   --z-raised: 10;
   --z-header: 100;
-  --z-held: 200;
   --z-modal: 300;
   --z-toast: 400;
 
@@ -170,7 +168,7 @@ ul, ol { list-style: none; }
 img, svg { display: block; max-width: 100%; }
 code, kbd { font-family: var(--font-mono); font-size: .9em; }
 code { overflow-wrap: anywhere; }
-/* 잡힌 쫄라맨이 화면 끝에서 버둥거려도 가로 스크롤이 생기지 않게 해요 */
+/* 넓은 장식 요소가 화면 끝에 닿아도 가로 스크롤이 생기지 않게 해요 */
 main { overflow-x: clip; }
 main:focus { outline: none; }
 [hidden] { display: none !important; }
@@ -289,14 +287,21 @@ kbd {
   .site-nav a { padding-inline: var(--space-2); }
 }
 
-/* ---------- 5. 히어로와 쫄라맨 ---------- */
+/* ---------- 5. 히어로 ----------
+   제목 타자, 문장 슬롯(.tk-reel), 터미널 창(.tm)은 script.js의 히어로 모션이 시간에 맞춰 그려요.
+   여기에는 배치와 모양만 두고, 타임라인 요소에는 transition과 @keyframes를 쓰지 않아요. */
 .hero {
+  --tm-fs: .75rem;      /* 터미널 글자 12px */
+  --tm-lh: 1.1875rem;   /* 터미널 한 줄 19px */
+  --tm-rows: 7.5;       /* 창에 보이는 줄 수 (빈 줄은 0.5) */
+  --tm-pad: .75rem;
+  --tm-head: 2.25rem;
   position: relative;
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  grid-template-areas: "id id" "title title" "sub sub" "cta stage";
-  column-gap: var(--space-5);
-  padding-top: var(--space-6);
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: "id" "title" "reel" "sub" "cta" "tm";
+  padding-top: var(--space-5);
+  padding-bottom: var(--space-6);
 }
 .hero-id {
   grid-area: id;
@@ -305,100 +310,152 @@ kbd {
 }
 .hero-id strong { color: var(--text); font-weight: 600; }
 .hero h1 {
-  grid-area: title; max-width: var(--measure-title); margin-top: var(--space-3);
+  grid-area: title; max-width: var(--measure-title); margin-top: var(--space-1);
   font-size: var(--text-hero); font-weight: 700;
 }
 /* 쉼표 뒤에서 항상 줄을 바꿔요 */
-.hero h1 .phrase { display: block; }
-.hero-sub { grid-area: sub; max-width: var(--measure-m); margin-top: var(--space-4); font-size: var(--text-md); color: var(--muted); }
+.hero h1 .phrase { display: block; will-change: clip-path; }
+.hero-sub { grid-area: sub; max-width: var(--measure-m); margin-top: var(--space-3); font-size: var(--text-md); color: var(--muted); }
 .hero-cta { grid-area: cta; align-self: start; justify-self: start; margin-top: var(--space-5); margin-bottom: var(--space-6); }
-/* 쫄라맨과 말풍선이 들어갈 높이를 비워 둬요 */
-.stage { grid-area: stage; min-height: var(--stage-h); }
+/* 키보드 포커스가 오면 도입부 중이어도 바로 보여요 (투명한 버튼에 포커스 링이 안 보이는 일이 없게) */
+.hero-cta:focus-visible { opacity: 1 !important; translate: none !important; }
+
+/* 제목을 쓰는 캐럿 */
+.tm-caret {
+  position: absolute; left: 0; top: 0; z-index: 1;
+  width: 3px; height: 1em;
+  background: var(--accent); border-radius: 1px;
+  opacity: 0; pointer-events: none;
+  will-change: transform, opacity;
+}
+
+/* 문장 슬롯: 제목 아래 한 줄, 글자마다 세로로 굴러가요. 줄 높이가 처음부터 잡혀 있어서 아래 문단은 움직이지 않아요.
+   min-height는 overflow: hidden 때문에 최소 높이가 0이 되어 격자 줄 높이가 틀어지는 것을 막아요 */
+.tk-reel {
+  grid-area: reel; display: grid; min-width: 0; min-height: 1.14em; margin-top: var(--space-1);
+  overflow: hidden; pointer-events: none; user-select: none; -webkit-user-select: none;
+  font-size: clamp(1.25rem, .75rem + 2vw, 2.125rem); font-weight: 500; line-height: 1.14;
+  letter-spacing: var(--tracking-display); white-space: nowrap; color: var(--text);
+}
+.tk-line { grid-area: 1 / 1; }
+.tk-c { display: inline-block; transform: translateY(110%); }
+/* 스크립트가 돌기 전에는 마지막 문장만 보여요 */
+.tk-reel:not(.is-live) .tk-line:not(:last-child) { visibility: hidden; }
+
+/* 터미널 창 */
+.tm { grid-area: tm; position: relative; min-width: 0; }
+/* JS가 꺼져 있으면 창과 재생 버튼을 통째로 빼요 (빈 자리와 눌러도 안 되는 버튼이 남지 않게). html.js는 index.html이 달아요 */
+html:not(.js) .tm { display: none; }
+.tm-card {
+  border: var(--hair) solid var(--line); border-radius: var(--radius-panel);
+  background: var(--surface); box-shadow: var(--shadow-pop); overflow: hidden;
+  font-family: var(--font-mono); font-size: var(--tm-fs); color: var(--text);
+  opacity: 0;
+}
+.tm-head {
+  display: flex; align-items: center; gap: var(--space-3);
+  height: var(--tm-head); padding: 0 calc(var(--space-4) + 2rem) 0 var(--space-4);
+  background: var(--surface-2); border-bottom: var(--hair) solid var(--line);
+}
+.tm-head .dots { --dot: .5625rem; }
+.tm-title {
+  flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  font-size: var(--tm-fs); color: var(--muted);
+}
+/* 위로 밀려나는 줄은 안쪽 여백에서 흐려지며 사라져요 */
+.tm-body {
+  position: relative; overflow: hidden;
+  height: calc(var(--tm-lh) * var(--tm-rows) + 2 * var(--tm-pad));
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 var(--tm-pad), #000 calc(100% - var(--tm-pad) / 2), transparent);
+  mask-image: linear-gradient(to bottom, transparent, #000 var(--tm-pad), #000 calc(100% - var(--tm-pad) / 2), transparent);
+}
+.tm-scroll { position: relative; padding: var(--tm-pad) var(--space-4); }
+/* 한 줄은 높이가 고정이라 줄이 넘쳐도 창 크기는 그대로예요 */
+.tl {
+  height: var(--tm-lh); line-height: var(--tm-lh);
+  white-space: pre; overflow: hidden; text-overflow: clip;
+  opacity: 0;
+}
+.tl.gap { margin-top: calc(var(--tm-lh) / 2); }
+.tl .p, .tl .acc, .tl .n { color: var(--accent); }
+.tl .dim { color: var(--muted); }
+.tl .bad { color: var(--danger); }
+.tl .it, .tl .n, .tl .res { display: inline-block; }
+.tl .n { min-width: 1ch; font-weight: 500; }
+.tl .cur {
+  display: inline-block; width: .6em; height: 1.15em; margin-left: 1px;
+  vertical-align: -.22em; background: var(--accent); border-radius: 1px;
+  opacity: 0;
+}
+.tl.d-only { display: none; }
+/* 타자로 나올 글자를 미리 한 번 그려서 글꼴이 늦게 바뀌지 않게 해요 */
+.tl-ghost { position: absolute; left: 0; top: 0; white-space: pre; opacity: 0; pointer-events: none; }
+/* 마지막 줄: 왼쪽은 프롬프트, 오른쪽은 실제 터미널을 여는 방법 */
+.tl.last { display: flex; align-items: center; gap: var(--space-3); }
+.tl.last .rp { margin-left: auto; color: var(--muted); display: inline-flex; align-items: center; gap: .4em; }
+.tl.last kbd {
+  min-width: 1.6em; height: 1.6em; padding-inline: .35em; font-size: .9em; border-radius: .3rem;
+  color: var(--text); border-color: var(--line-control); background: var(--bg);
+}
+.tl.last .rp-touch { display: none; }
+@media (hover: none) {
+  .tl.last .rp-key { display: none; }
+  .tl.last .rp-touch { display: inline-flex; }
+}
+
+/* 재생 제어 (움직이는 장식은 멈출 수 있어야 해요) */
+.tm-ctl {
+  position: absolute; z-index: var(--z-raised);
+  top: calc((var(--tm-head) - 2rem) / 2); right: .375rem;
+  display: grid; place-items: center; width: 2rem; height: 2rem;
+  border: 0; border-radius: var(--radius-control); background: none; color: var(--muted);
+  opacity: 0;
+}
+.tm-ctl:hover { color: var(--text); background: color-mix(in srgb, var(--text) 7%, transparent); }
+/* 누르거나 포커스한 버튼은 '다시 보기'로 처음부터 그려도 손 아래에서 사라지거나 움직이지 않아요 */
+.tm-ctl:hover, .tm-ctl:focus-visible { opacity: 1 !important; transform: none !important; }
+.tm-ctl:focus-visible { outline-offset: 0; }
+.tm-ctl svg { display: none; width: .875rem; height: .875rem; fill: currentColor; }
+.tm-ctl .i-replay { fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.tm-ctl[data-state="playing"] .i-pause,
+.tm-ctl[data-state="paused"] .i-play,
+.tm-ctl[data-state="ended"] .i-replay { display: block; }
+
+/* 좁은 화면: 가장 긴 줄(42자)이 잘리지 않게 터미널 글자를 380px 이하에서 11px, 350px 이하에서 10px로 */
+@media (max-width: 23.75rem) {
+  .hero { --tm-fs: .6875rem; --tm-lh: 1.125rem; }
+  .tm-scroll { padding-inline: var(--space-3); }
+  .tm-head { padding-left: var(--space-3); }
+}
+@media (max-width: 21.875rem) {
+  .hero { --tm-fs: .625rem; }
+}
+/* 태블릿: 창은 버튼 아래, 너비만 제한 */
 @media (min-width: 48rem) {
   .hero {
-    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
-    grid-template-areas: "id id" "title title" "sub stage" "cta stage";
-    column-gap: var(--space-6);
-    padding-top: var(--space-8);
+    --tm-fs: .8125rem; --tm-lh: 1.375rem; --tm-rows: 9; --tm-pad: .875rem; --tm-head: 2.5rem;
+    padding-top: var(--space-6);
+    padding-bottom: var(--space-7);
   }
-  .hero-sub { margin-top: var(--space-5); }
+  .hero h1 { margin-top: var(--space-3); }
   .hero-sub .phrase { display: inline-block; }
   .hero-cta { margin-bottom: var(--space-7); }
-  .stage { --stage-h: 11rem; }
+  .tm { max-width: 34rem; }
+  .tl.d-only { display: block; }
 }
-
-.buddy {
-  --buddy-w: 3rem;
-  --face: 2.875rem;
-  --body-w: 2.375rem;
-  --body-h: 3.4375rem;
-  position: absolute; left: 0; bottom: 0; z-index: var(--z-raised);
-  width: var(--buddy-w); border: 0; background: none; border-radius: var(--radius-control);
-  cursor: grab; user-select: none; -webkit-user-select: none;
-  touch-action: none; -webkit-touch-callout: none;
-  will-change: transform;
+/* 데스크톱: 창은 오른쪽 열, 아래 끝을 버튼 아래 끝에 맞춰요 */
+@media (min-width: 64rem) {
+  .hero {
+    --tm-rows: 11;
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    grid-template-areas: "id tm" "title tm" "reel tm" "sub tm" "cta tm";
+    column-gap: var(--space-6);
+    padding-bottom: 0;
+  }
+  .tm { align-self: end; max-width: none; margin-bottom: var(--space-7); }
 }
-@media (min-width: 37.5rem) {
-  .buddy { --buddy-w: 4rem; --face: 3.75rem; --body-w: 3.125rem; --body-h: 4.5rem; }
-}
-.buddy-inner { position: relative; display: flex; flex-direction: column; align-items: center; }
-.buddy-face {
-  position: relative; z-index: 1;
-  width: var(--face); height: var(--face); object-fit: contain;
-  margin-bottom: calc(-1 * var(--space-1));
-}
-.buddy-face.fallback { border-radius: var(--radius-round); object-fit: cover; border: var(--rule-w) solid var(--text); }
-.buddy-body { width: var(--body-w); height: var(--body-h); max-width: none; overflow: visible; }
-.buddy-body line { stroke: var(--text); stroke-width: 3; stroke-linecap: round; }
-.limb { transform-box: view-box; }
-.arm-l, .arm-r { transform-origin: 25px 6px; }
-.leg-l, .leg-r { transform-origin: 25px 36px; }
-.arm-l { transform: rotate(32deg); } .arm-r { transform: rotate(-32deg); }
-.leg-l { transform: rotate(16deg); } .leg-r { transform: rotate(-16deg); }
-
-.buddy.walking .leg-l, .buddy.walking .arm-r { animation: swing .5s ease-in-out infinite alternate; }
-.buddy.walking .leg-r, .buddy.walking .arm-l { animation: swing .5s ease-in-out infinite alternate-reverse; }
-.buddy.walking .buddy-inner { animation: bob .25s ease-in-out infinite alternate; }
-@keyframes swing { from { transform: rotate(-34deg); } to { transform: rotate(34deg); } }
-@keyframes bob { to { transform: translateY(-3px); } }
-
-.buddy.running .leg-l, .buddy.running .arm-r { animation: sprint .2s ease-in-out infinite alternate; }
-.buddy.running .leg-r, .buddy.running .arm-l { animation: sprint .2s ease-in-out infinite alternate-reverse; }
-.buddy.running .buddy-inner { animation: runbob .1s ease-in-out infinite alternate; }
-@keyframes sprint { from { transform: rotate(-55deg); } to { transform: rotate(55deg); } }
-@keyframes runbob {
-  from { transform: rotate(calc(var(--dir, 1) * 10deg)); }
-  to { transform: translateY(-6px) rotate(calc(var(--dir, 1) * 10deg)); }
-}
-
-/* 잡혀서 버둥버둥. 잡혀 있는 동안에는 헤더보다 위로 올라와요 */
-.buddy.dragging { cursor: grabbing; z-index: var(--z-held); }
-.buddy.dragging .leg-l, .buddy.dragging .arm-r { animation: sprint .12s linear infinite alternate; }
-.buddy.dragging .leg-r, .buddy.dragging .arm-l { animation: sprint .12s linear infinite alternate-reverse; }
-.buddy.dragging .buddy-inner { transform-origin: 50% 20%; animation: dangle .45s ease-in-out infinite alternate; }
-@keyframes dangle { from { transform: rotate(-9deg); } to { transform: rotate(9deg); } }
-
-.buddy.waving .arm-r { animation: wave .3s ease-in-out infinite alternate; }
-@keyframes wave { from { transform: rotate(-115deg); } to { transform: rotate(-70deg); } }
-
-.buddy.jumping .buddy-inner { animation: jump .55s cubic-bezier(.3, .7, .4, 1); }
-@keyframes jump { 40% { transform: translateY(-70px) rotate(-8deg); } 70% { transform: translateY(0) scaleY(.9); } }
-
-/* 말풍선: --bx만큼 옆으로 밀어서 무대(잡혔을 때는 화면) 밖으로 나가지 않게 해요 */
-.buddy-bubble {
-  position: absolute; bottom: calc(100% + var(--space-2)); left: 50%; z-index: 2;
-  transform: translateX(calc(-50% + var(--bx, 0px))) scale(.8);
-  padding: var(--space-1) var(--space-3);
-  border: var(--hair) solid var(--line-control); border-radius: var(--radius-control);
-  background: var(--surface); color: var(--text);
-  font-size: var(--text-xs); line-height: var(--lh-snug); white-space: nowrap;
-  opacity: 0; pointer-events: none;
-  transition: opacity var(--dur-1), transform var(--dur-1);
-}
-.buddy-bubble.show { opacity: 1; transform: translateX(calc(-50% + var(--bx, 0px))) scale(1); }
 
 /* ---------- 6. 프로젝트 ---------- */
-/* 윗선이 쫄라맨의 바닥이에요 */
 .projects-grid {
   display: grid; gap: var(--space-7);
   border-top: var(--hair) solid var(--text);
@@ -838,11 +895,9 @@ a.fig-frame:hover { border-color: var(--accent); }
 /* ---------- 10. 모션 ---------- */
 @media (prefers-reduced-motion: no-preference) {
   html { scroll-behavior: smooth; }
-  /* 읽는 순서대로 등장 */
-  .hero-id, .hero h1, .hero-sub, .hero-cta { animation: rise var(--dur-3) var(--ease-out) backwards; }
-  .hero h1 { animation-delay: 60ms; }
-  .hero-sub { animation-delay: 120ms; }
-  .hero-cta { animation-delay: 180ms; }
+  /* 히어로 등장은 script.js의 히어로 모션이 맡아요. 모션이 t=0을 그리기 전(html.hero-wait)에도 첫 화면부터 그 시작 상태로 숨겨 둬서,
+     다 보였던 히어로가 스크립트 실행과 함께 사라지는 깜빡임이 없어요. 해제는 script.js가, 늦으면 index.html의 안전장치가 해요 */
+  .hero-wait .hero-id, .hero-wait .hero h1, .hero-wait .tk-reel, .hero-wait .hero-sub, .hero-wait .hero-cta { opacity: 0; }
   /* 화면에 들어올 때 한 번 */
   .reveal { opacity: 0; transform: translateY(var(--space-4)); transition: opacity var(--dur-3) var(--ease-out), transform var(--dur-3) var(--ease-out); }
   .reveal.in { opacity: 1; transform: none; }
